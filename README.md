@@ -6,7 +6,9 @@
 
 ## 整体知识图谱
 
-![Android Framework 知识图谱](https://github.com/MrLeviZhao0/knowledge_package/blob/main/whiteboard_exported_image.png?raw=true)
+![项目经验](https://github.com/MrLeviZhao0/knowledge_package/blob/main/project.png?raw=true)
+
+![Android Framework 知识图谱](https://github.com/MrLeviZhao0/knowledge_package/blob/main/knowledge.png?raw=true)
 
 ## 模块目录结构
 
