@@ -8,44 +8,55 @@
 
 ```
 Android知识库
-├── [业务模块知识](业务模块知识/) (Business Modules)
-│   ├── [Framework核心服务](业务模块知识/Framework/)
-│   │   ├── [WMS](业务模块知识/Framework/WMS/) (Window Manager Service)
-│   │   ├── [IMS](业务模块知识/Framework/IMS/) (Input Manager Service)
-│   │   ├── [AMS](业务模块知识/Framework/AMS/) (Activity Manager Service)
-│   │   ├── [PKMS](业务模块知识/Framework/PKMS/) (Package Manager Service)
-│   │   └── [亮灭屏模块](业务模块知识/Framework/亮灭屏模块/)
-│   │       ├── [PMS](业务模块知识/Framework/亮灭屏模块/PMS/) (Power Manager Service)
-│   │       ├── [DMS](业务模块知识/Framework/亮灭屏模块/DMS/) (Display Manager Service)
-│   │       ├── [Thermal](业务模块知识/Framework/亮灭屏模块/Thermal/) (温控模块)
-│   │       └── [AON](业务模块知识/Framework/亮灭屏模块/AON/) (Always On Display)
-│   ├── [APM开发](业务模块知识/APM开发/) (性能监控)
-│   │   ├── [Hook技术](业务模块知识/APM开发/Hook技术/)
-│   │   └── [指标监控](业务模块知识/APM开发/指标监控/)
-│   ├── [性能优化](业务模块知识/性能/)
-│   └── [稳定性保障](业务模块知识/稳定性/)
-├── [基础技术八股文知识](基础技术八股文知识/) (Core Technologies)
-│   ├── [App基础](基础技术八股文知识/app基础/)
-│   │   ├── [Binder机制](基础技术八股文知识/app基础/binder/)
-│   │   ├── [Handler机制](基础技术八股文知识/app基础/handler/)
-│   │   └── [App冷启动](基础技术八股文知识/app基础/App冷启动/)
-│   ├── [Native基础](基础技术八股文知识/naitve基础/)
-│   │   ├── [JNI开发](基础技术八股文知识/naitve基础/JNI/)
-│   │   ├── [AIDL/HIDL](基础技术八股文知识/naitve基础/aidl_hidl/)
-│   │   └── [Poll机制](基础技术八股文知识/naitve基础/poll机制/)
-│   ├── [BSP基础](基础技术八股文知识/bsp基础/)
-│   │   ├── [Ioctl机制](基础技术八股文知识/bsp基础/ioctl/)
-│   │   └── [系统启动流程](基础技术八股文知识/bsp基础/系统启动流程/)
-│   ├── [安全技术](基础技术八股文知识/安全/)
-│   │   ├── [SELinux](基础技术八股文知识/安全/selinux/)
-│   │   └── [TrustZone/TUI](基础技术八股文知识/安全/trustzone_tui/)
-│   └── [编译系统](基础技术八股文知识/编译/)
-│       └── [Soong & Bazel](基础技术八股文知识/编译/soong&bazel/)
-└── [语言技巧知识](语言技巧知识/) (Language Skills)
-    ├── [AArch64汇编](语言技巧知识/aarch64/)
-    ├── [Kotlin语言](语言技巧知识/kotlin/)
-    ├── [Rust语言](语言技巧知识/rust/)
-    └── [Smali逆向](语言技巧知识/smali/)
+├── 业务模块知识 (Business Modules)
+│   ├── Framework核心服务
+│   │   ├── WMS (Window Manager Service)
+│   │   ├── IMS (Input Manager Service)
+│   │   ├── AMS (Activity Manager Service)
+│   │   ├── PKMS (Package Manager Service)
+│   │   ├── 亮灭屏模块
+│   │   │   ├── PMS (Power Manager Service)
+│   │   │   ├── DMS (Display Manager Service)
+│   │   │   ├── Thermal (温控模块)
+│   │   │   └── AON (Always On Display)
+│   │   └── Display/合成
+│   │       └── SurfaceFlinger (显示合成服务)
+│   ├── APM开发 (性能监控)
+│   │   ├── Hook技术
+│   │   └── 指标监控
+│   ├── 性能优化
+│   ├── 稳定性保障
+│   ├── 绘制渲染
+│   │   ├── RenderNode
+│   │   ├── RenderThread
+│   │   └── 高斯模糊
+│   └── Display
+│       ├── 合成 (SurfaceFlinger)
+│       └── 显存
+├── 基础技术八股文知识 (Core Technologies)
+│   ├── App基础
+│   │   ├── Binder机制
+│   │   ├── Handler机制
+│   │   └── App冷启动
+│   ├── Native基础
+│   │   ├── JNI开发
+│   │   ├── AIDL/HIDL
+│   │   └── Poll机制
+│   ├── BSP基础
+│   │   ├── Ioctl机制
+│   │   └── 系统启动流程
+│   ├── 安全技术
+│   │   ├── SELinux
+│   │   └── TrustZone/TUI
+│   └── 编译系统
+│       └── Soong & Bazel
+└── 语言技巧知识 (Language Skills)
+    ├── AArch64汇编
+    ├── C++语言
+    ├── Java语言
+    ├── Kotlin语言
+    ├── Rust语言
+    └── Smali逆向
 ```
 
 ## 1. 业务模块知识
@@ -111,6 +122,15 @@ Android知识库
 - **项目经验**：[AON项目经验](业务模块知识/Framework/亮灭屏模块/AON/AON项目经验.md)
 - **面试技巧**：[AON厂商技术面试技巧](业务模块知识/Framework/亮灭屏模块/AON/AON厂商技术面试技巧.md)
 
+#### 1.1.6 Display/合成 (SurfaceFlinger)
+**核心职责**：图层合成管理、显示输出、帧率控制、性能优化
+- **核心知识**：[SurfaceFlinger核心知识_概述与数据结构](业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md)
+- **设计思路**：[SurfaceFlinger核心知识_设计思路与线程进程模型](业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[SurfaceFlinger核心知识_接口与运转流程](业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md)
+- **主要功能**：[SurfaceFlinger核心知识_主要功能与优化](业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md)
+- **项目经验**：[SurfaceFlinger项目经验](业务模块知识/Display/合成/SurfaceFlinger项目经验.md)
+- **面试技巧**：[SurfaceFlinger厂商技术面试技巧](业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md)
+
 ### 1.2 APM开发 (性能监控)
 
 #### 1.2.1 Hook技术
@@ -136,6 +156,29 @@ Android知识库
 - **监控框架**：[稳定性监控框架与实现原理](业务模块知识/稳定性/稳定性监控框架与实现原理.md)
 - **知识体系**：[稳定性知识体系](业务模块知识/稳定性/稳定性知识体系.md)
 - **真实案例**：[真实案例库](业务模块知识/稳定性/真实案例库.md)
+
+### 1.5 绘制渲染
+#### 1.5.1 RenderNode
+- **核心知识**：[RenderNode核心知识](业务模块知识/绘制渲染/RenderNode/RenderNode核心知识.md)
+
+#### 1.5.2 RenderThread
+- **核心知识**：[RenderThread核心知识](业务模块知识/绘制渲染/RenderThread/RenderThread核心知识.md)
+
+#### 1.5.3 高斯模糊
+- **核心知识**：[高斯模糊核心知识](业务模块知识/绘制渲染/高斯模糊/高斯模糊核心知识.md)
+
+### 1.6 Display
+#### 1.6.1 合成 (SurfaceFlinger)
+**核心职责**：图层合成管理、显示输出、帧率控制、性能优化
+- **核心知识**：[SurfaceFlinger核心知识_概述与数据结构](业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md)
+- **设计思路**：[SurfaceFlinger核心知识_设计思路与线程进程模型](业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[SurfaceFlinger核心知识_接口与运转流程](业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md)
+- **主要功能**：[SurfaceFlinger核心知识_主要功能与优化](业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md)
+- **项目经验**：[SurfaceFlinger项目经验](业务模块知识/Display/合成/SurfaceFlinger项目经验.md)
+- **面试技巧**：[SurfaceFlinger厂商技术面试技巧](业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md)
+
+#### 1.6.2 显存
+- **核心知识**：[显存核心知识_概述与数据结构](业务模块知识/Display/显存/显存核心知识_概述与数据结构.md)
 
 ## 2. 基础技术八股文知识
 
@@ -220,14 +263,48 @@ Android知识库
 - **性能优化**：[性能优化](语言技巧知识/aarch64/性能优化.md)
 - **加密算法识别**：[加密算法识别](语言技巧知识/aarch64/加密算法识别.md)
 
-### 3.2 Kotlin语言
-- **语法基础**：[语法基础](语言技巧知识/kotlin/语法基础.md)
+### 3.2 C++语言
+- **语法基础**：[语法基础](语言技巧知识/cpp/语法基础.md)
+- **常见问题**：[常见问题](语言技巧知识/cpp/常见问题.md)
 
-### 3.3 Rust语言
+### 3.3 Java语言
+- **语法基础**：[语法基础](语言技巧知识/java/语法基础.md)
+- **面向对象**：[面向对象](语言技巧知识/java/面向对象.md)
+- **集合框架**：[集合框架](语言技巧知识/java/集合框架.md)
+- **异常处理**：[异常处理](语言技巧知识/java/异常处理.md)
+- **常见问题**：[常见问题](语言技巧知识/java/常见问题.md)
+
+### 3.4 Kotlin语言
+- **语法基础**：[语法基础](语言技巧知识/kotlin/语法基础.md)
+- **与Java对比**：[与Java对比](语言技巧知识/kotlin/与Java对比.md)
+- **空安全机制**：[空安全机制](语言技巧知识/kotlin/空安全机制.md)
+- **扩展函数**：[扩展函数](语言技巧知识/kotlin/扩展函数.md)
+- **委托属性**：[委托属性](语言技巧知识/kotlin/委托属性.md)
+- **协程编程**：[协程编程](语言技巧知识/kotlin/协程编程.md)
+- **函数式编程**：[函数式编程](语言技巧知识/kotlin/函数式编程.md)
+- **状态管理**：[状态管理](语言技巧知识/kotlin/状态管理.md)
+- **性能优化**：[性能优化](语言技巧知识/kotlin/性能优化.md)
+- **常见问题**：[常见问题](语言技巧知识/kotlin/常见问题.md)
+- **代码练习**：[代码练习](语言技巧知识/kotlin/代码练习.md)
+- **Android开发**：[Android开发](语言技巧知识/kotlin/Android开发.md)
+- **Compose基础**：[Compose基础](语言技巧知识/kotlin/Compose基础.md)
+- **导航和架构**：[导航和架构](语言技巧知识/kotlin/导航和架构.md)
+- **主题和动画**：[主题和动画](语言技巧知识/kotlin/主题和动画.md)
+
+### 3.5 Rust语言
 - **语法基础**：[语法基础](语言技巧知识/rust/语法基础.md)
 - **所有权系统**：[所有权系统](语言技巧知识/rust/所有权系统.md)
+- **类型系统**：[类型系统](语言技巧知识/rust/类型系统.md)
+- **并发编程**：[并发编程](语言技巧知识/rust/并发编程.md)
+- **性能优化**：[性能优化](语言技巧知识/rust/性能优化.md)
+- **高级特性**：[高级特性](语言技巧知识/rust/高级特性.md)
+- **与C++对比**：[与C++对比](语言技巧知识/rust/与C++对比.md)
+- **常见问题**：[常见问题](语言技巧知识/rust/常见问题.md)
+- **代码练习**：[代码练习](语言技巧知识/rust/代码练习.md)
+- **项目实战**：[项目实战](语言技巧知识/rust/项目实战.md)
+- **Android集成**：[Android集成](语言技巧知识/rust/Android集成.md)
 
-### 3.4 Smali逆向
+### 3.6 Smali逆向
 - **语法基础**：[语法基础](语言技巧知识/smali/语法基础.md)
 - **反编译原理**：[反编译原理](语言技巧知识/smali/反编译原理.md)
 - **类型系统**：[类型系统](语言技巧知识/smali/类型系统.md)
