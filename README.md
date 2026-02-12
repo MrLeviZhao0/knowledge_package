@@ -18,6 +18,8 @@
     ├── 业务模块知识体系通用Skill文档模板.md
     ├── WMS/              # Window Manager Service
     ├── IMS/              # Input Manager Service
+    ├── AMS/              # Activity Manager Service
+    ├── PKMS/             # Package Manager Service
     └── 亮灭屏模块/        # 屏幕亮灭控制模块
         ├── PMS/          # Power Manager Service
         ├── DMS/          # Display Manager Service
