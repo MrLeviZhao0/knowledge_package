@@ -127,15 +127,6 @@ Android知识库
 - **项目经验**：[AON项目经验](业务模块知识/Framework/亮灭屏模块/AON/AON项目经验.md)
 - **面试技巧**：[AON厂商技术面试技巧](业务模块知识/Framework/亮灭屏模块/AON/AON厂商技术面试技巧.md)
 
-#### 1.1.6 Display/合成 (SurfaceFlinger)
-**核心职责**：图层合成管理、显示输出、帧率控制、性能优化
-- **核心知识**：[SurfaceFlinger核心知识_概述与数据结构](业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md)
-- **设计思路**：[SurfaceFlinger核心知识_设计思路与线程进程模型](业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md)
-- **接口流程**：[SurfaceFlinger核心知识_接口与运转流程](业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md)
-- **主要功能**：[SurfaceFlinger核心知识_主要功能与优化](业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md)
-- **项目经验**：[SurfaceFlinger项目经验](业务模块知识/Display/合成/SurfaceFlinger项目经验.md)
-- **面试技巧**：[SurfaceFlinger厂商技术面试技巧](业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md)
-
 ### 1.2 APM开发 (性能监控)
 
 #### 1.2.1 Hook技术
