@@ -32,7 +32,13 @@ Android知识库
 │   │   └── 高斯模糊
 │   └── Display
 │       ├── 合成 (SurfaceFlinger)
-│       └── 显存
+│       ├── DRM/KMS (显示驱动管理)
+│       ├── KGSL (GPU驱动管理)
+│       ├── Fence (同步机制)
+│       ├── Bringup (显示系统启动)
+│       ├── Panel (显示面板)
+│       ├── Display Feature (显示特性)
+│       └── 显存管理
 ├── 基础技术八股文知识 (Core Technologies)
 │   ├── App基础
 │   │   ├── Binder机制
@@ -56,7 +62,8 @@ Android知识库
     ├── Java语言
     ├── Kotlin语言
     ├── Rust语言
-    └── Smali逆向
+    ├── Smali逆向
+    └── ViberCoding (AI编程助手)
 ```
 
 ## 1. 业务模块知识
@@ -177,8 +184,57 @@ Android知识库
 - **项目经验**：[SurfaceFlinger项目经验](业务模块知识/Display/合成/SurfaceFlinger项目经验.md)
 - **面试技巧**：[SurfaceFlinger厂商技术面试技巧](业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md)
 
-#### 1.6.2 显存
+#### 1.6.2 DRM/KMS
+**核心职责**：显示驱动管理、模式设置、硬件加速、多屏显示
+- **核心知识**：[DRM_KMS核心知识_概述与数据结构](业务模块知识/Display/DRM/DRM_KMS核心知识_概述与数据结构.md)
+- **设计思路**：[DRM_KMS核心知识_设计思路与线程进程模型](业务模块知识/Display/DRM/DRM_KMS核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[DRM_KMS核心知识_接口与运转流程](业务模块知识/Display/DRM/DRM_KMS核心知识_接口与运转流程.md)
+- **主要功能**：[DRM_KMS核心知识_主要功能与优化](业务模块知识/Display/DRM/DRM_KMS核心知识_主要功能与优化.md)
+
+#### 1.6.3 KGSL (Kernel Graphics Support Layer)
+**核心职责**：GPU驱动管理、图形内存管理、命令提交、同步机制
+- **核心知识**：[KGSL核心知识_概述与数据结构](业务模块知识/Display/kgsl/KGSL核心知识_概述与数据结构.md)
+- **设计思路**：[KGSL核心知识_设计思路与线程进程模型](业务模块知识/Display/kgsl/KGSL核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[KGSL核心知识_接口与运转流程](业务模块知识/Display/kgsl/KGSL核心知识_接口与运转流程.md)
+- **主要功能**：[KGSL核心知识_主要功能与优化](业务模块知识/Display/kgsl/KGSL核心知识_主要功能与优化.md)
+- **项目经验**：[KGSL项目经验](业务模块知识/Display/kgsl/KGSL项目经验.md)
+- **面试技巧**：[KGSL厂商技术面试技巧](业务模块知识/Display/kgsl/KGSL厂商技术面试技巧.md)
+
+#### 1.6.4 Fence同步机制
+**核心职责**：图形流水线同步、缓冲区管理、性能优化
+- **核心知识**：[fence核心知识_概述与数据结构](业务模块知识/Display/fence/fence核心知识_概述与数据结构.md)
+- **设计思路**：[fence核心知识_设计思路与线程进程模型](业务模块知识/Display/fence/fence核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[fence核心知识_接口与运转流程](业务模块知识/Display/fence/fence核心知识_接口与运转流程.md)
+- **主要功能**：[fence核心知识_主要功能与优化](业务模块知识/Display/fence/fence核心知识_主要功能与优化.md)
+- **项目经验**：[fence项目经验](业务模块知识/Display/fence/fence项目经验.md)
+
+#### 1.6.5 Display Bringup
+**核心职责**：显示系统启动、硬件初始化、驱动调试、问题排查
+- **核心知识**：[Display Bringup核心知识_概述与数据结构](业务模块知识/Display/bringup/Display Bringup核心知识_概述与数据结构.md)
+- **设计思路**：[Display Bringup核心知识_设计思路与线程进程模型](业务模块知识/Display/bringup/Display Bringup核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[Display Bringup核心知识_接口与运转流程](业务模块知识/Display/bringup/Display Bringup核心知识_接口与运转流程.md)
+- **主要功能**：[Display Bringup核心知识_主要功能与优化](业务模块知识/Display/bringup/Display Bringup核心知识_主要功能与优化.md)
+- **项目经验**：[Display Bringup项目经验](业务模块知识/Display/bringup/Display Bringup项目经验.md)
+- **面试技巧**：[Display Bringup厂商技术面试技巧](业务模块知识/Display/bringup/Display Bringup厂商技术面试技巧.md)
+
+#### 1.6.6 Panel显示面板
+**核心职责**：显示面板驱动、AOD技术、超分技术、面板特性
+- **核心知识**：[panel核心知识_概述与数据结构](业务模块知识/Display/panel/panel核心知识_概述与数据结构.md)
+- **设计思路**：[panel核心知识_设计思路与线程进程模型](业务模块知识/Display/panel/panel核心知识_设计思路与线程进程模型.md)
+- **主要功能**：[panel核心知识_AOD与超分技术](业务模块知识/Display/panel/panel核心知识_AOD与超分技术.md)
+
+#### 1.6.7 Display Feature
+**核心职责**：显示特性管理、功能定制、性能优化
+- **核心知识**：[displayfeature核心知识_概述与数据结构](业务模块知识/Display/displayfeature/displayfeature核心知识_概述与数据结构.md)
+- **设计思路**：[displayfeature核心知识_设计思路与实现技术](业务模块知识/Display/displayfeature/displayfeature核心知识_设计思路与实现技术.md)
+
+#### 1.6.8 显存管理
+**核心职责**：图形内存分配、监控管理、异常处理、性能优化
 - **核心知识**：[显存核心知识_概述与数据结构](业务模块知识/Display/显存/显存核心知识_概述与数据结构.md)
+- **申请通路**：[显存核心知识_申请通路与实例](业务模块知识/Display/显存/显存核心知识_申请通路与实例.md)
+- **监控实现**：[显存核心知识_监控实现与水位管理](业务模块知识/Display/显存/显存核心知识_监控实现与水位管理.md)
+- **指标分析**：[显存核心知识_获取指令与指标分析](业务模块知识/Display/显存/显存核心知识_获取指令与指标分析.md)
+- **异常处理**：[显存核心知识_异常案例与解决方法](业务模块知识/Display/显存/显存核心知识_异常案例与解决方法.md)
 
 ## 2. 基础技术八股文知识
 
@@ -321,6 +377,13 @@ Android知识库
   - [Jadx使用](语言技巧知识/smali/Jadx使用.md)
   - [Frida使用](语言技巧知识/smali/Frida使用.md)
 
+### 3.7 ViberCoding (AI编程助手)
+**核心职责**：AI编程助手使用、模型原理理解、智能代码生成
+- **知识库概述**：[ViberCoding知识库](语言技巧知识/ViberCoding/ViberCoding知识库.md)
+- **模型演进历程**：[模型演进历程-CNN-RNN-Transformer-Diffusion](语言技巧知识/ViberCoding/模型演进历程-CNN-RNN-Transformer-Diffusion.md)
+- **大语言模型原理**：[大语言模型原理深度解析](语言技巧知识/ViberCoding/大语言模型原理深度解析.md)
+- **Android开发工具**：[Android开发MCP工具推荐](语言技巧知识/ViberCoding/Android开发MCP工具推荐.md)
+
 ## 4. 快速索引指南
 
 ### 4.1 按技术领域索引
@@ -329,6 +392,11 @@ Android知识库
 - Framework服务：WMS、IMS、AMS、PKMS
 - 系统基础：Binder、Handler、JNI、AIDL/HIDL
 - 底层技术：Ioctl、Poll、系统启动流程
+
+**显示技术**：
+- 显示合成：SurfaceFlinger、DRM/KMS、KGSL
+- 同步机制：Fence、显存管理
+- 显示系统：Display Bringup、Panel、Display Feature
 
 **性能优化**：
 - APM开发：Hook技术、指标监控
