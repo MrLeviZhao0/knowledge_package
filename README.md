@@ -14,13 +14,11 @@ Android知识库
 │   │   ├── IMS (Input Manager Service)
 │   │   ├── AMS (Activity Manager Service)
 │   │   ├── PKMS (Package Manager Service)
-│   │   ├── 亮灭屏模块
-│   │   │   ├── PMS (Power Manager Service)
-│   │   │   ├── DMS (Display Manager Service)
-│   │   │   ├── Thermal (温控模块)
-│   │   │   └── AON (Always On Display)
-│   │   └── Display/合成
-│   │       └── SurfaceFlinger (显示合成服务)
+│   │   └── 亮灭屏模块
+│   │       ├── PMS (Power Manager Service)
+│   │       ├── DMS (Display Manager Service)
+│   │       ├── Thermal (温控模块)
+│   │       └── AON (Always On Display)
 │   ├── APM开发 (性能监控)
 │   │   ├── Hook技术
 │   │   └── 指标监控
