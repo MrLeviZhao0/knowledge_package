@@ -2169,54 +2169,6 @@
   ]
 }
 
-
-            // 将知识库结构转换为图形数据
-            function convertToGraphData(data, maxLevel = 3) {
-                const nodes = [];
-                const links = [];
-                let nodeId = 0;
-                
-                // 递归处理节点
-                function processNode(node, parentId = null, visible = true) {
-                    const currentNodeId = `${nodeId++}`;
-                    // 默认只显示到三级节点，且不显示文件
-                    const isVisible = visible && node.level <= maxLevel && (node.type === 'folder' || node.level <= 2);
-                    
-                    // 只添加可见节点
-                    if (isVisible) {
-                        // 添加节点
-                        nodes.push({
-                            id: currentNodeId,
-                            name: node.name,
-                            path: node.path,
-                            type: node.type,
-                            level: node.level,
-                            parent: parentId,
-                            children: node.children ? node.children.length : 0
-                        });
-                        
-                        // 添加连接
-                        if (parentId !== null) {
-                            links.push({
-                                source: parentId,
-                                target: currentNodeId
-                            });
-                        }
-                    }
-                    
-                    // 处理子节点
-                    if (node.children) {
-                        node.children.forEach(child => {
-                            processNode(child, isVisible ? currentNodeId : parentId, isVisible && (node.__expanded !== undefined ? node.__expanded : (node.level < maxLevel)));
-                        });
-                    }
-                    
-                    return currentNodeId;
-                }
-                
-                processNode(data);
-                
-                return { nodes, links };
             }
 
             // 获取图形数据
