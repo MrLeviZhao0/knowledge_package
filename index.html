@@ -235,11 +235,16 @@
                 return;
             }
             
+            console.log('3D Force Graph库已加载，版本检查:', ForceGraph3D.version || '未知版本');
+            
             if (typeof SpriteText === 'undefined') {
                 console.error('three-spritetext库未加载');
                 document.getElementById('loading-overlay').innerHTML = '<div style="padding: 20px; color: red;">three-spritetext库未加载，请检查网络连接</div>';
                 return;
             }
+            
+            console.log('three-spritetext库已加载，版本检查:', SpriteText.version || '未知版本');
+            console.log('THREE对象检查:', typeof THREE !== 'undefined' ? 'THREE已定义' : 'THREE未定义');
             
             console.log('所有库已加载，开始初始化图形');
             
@@ -248,6 +253,7 @@
                 console.log('图形初始化完成');
             } catch (error) {
                 console.error('初始化图形时出错:', error);
+                console.error('错误堆栈:', error.stack);
                 document.getElementById('loading-overlay').innerHTML = `<div style="padding: 20px; color: red;">初始化图形时出错: ${error.message}</div>`;
             }
         });
@@ -498,46 +504,79 @@
                 .linkColor(() => 'rgba(255,255,255,0.6)')
                 .linkWidth(1)
                 .nodeThreeObject(node => {
-                    // 创建节点组
-                    const group = new THREE.Group();
+                    console.log('创建节点对象:', node.name, node.type, node.level);
                     
-                    // 创建节点球体
-                    const geometry = new THREE.SphereGeometry(node.type === 'file' ? 3 : 5, 16, 16);
-                    const material = new THREE.MeshStandardMaterial({
-                        color: node.type === 'file' ? colorMap.file : (colorMap[node.level] || '#cccccc'),
-                        metalness: 0.3,
-                        roughness: 0.4
-                    });
-                    const sphere = new THREE.Mesh(geometry, material);
-                    group.add(sphere);
-                    
-                    // 创建文本标签
-                    const text = new SpriteText(node.name);
-                    text.color = 'white';
-                    text.textHeight = 8;
-                    text.fontSize = 8;
-                    text.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-                    text.padding = 2;
-                    text.borderRadius = 3;
-                    
-                    // 根据节点类型设置标签颜色
-                    if (node.type === 'file') {
-                        text.backgroundColor = 'rgba(148, 103, 189, 0.8)'; // 紫色
-                    } else {
-                        const levelColor = colorMap[node.level] || '#cccccc';
-                        // 将十六进制颜色转换为RGB
-                        const r = parseInt(levelColor.slice(1, 3), 16);
-                        const g = parseInt(levelColor.slice(3, 5), 16);
-                        const b = parseInt(levelColor.slice(5, 7), 16);
-                        text.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.8)`;
+                    try {
+                        // 创建节点组
+                        const group = new THREE.Group();
+                        console.log('THREE.Group创建成功');
+                        
+                        // 创建节点球体
+                        const geometry = new THREE.SphereGeometry(node.type === 'file' ? 3 : 5, 16, 16);
+                        console.log('THREE.SphereGeometry创建成功');
+                        
+                        const material = new THREE.MeshStandardMaterial({
+                            color: node.type === 'file' ? colorMap.file : (colorMap[node.level] || '#cccccc'),
+                            metalness: 0.3,
+                            roughness: 0.4
+                        });
+                        console.log('THREE.MeshStandardMaterial创建成功');
+                        
+                        const sphere = new THREE.Mesh(geometry, material);
+                        console.log('THREE.Mesh创建成功');
+                        
+                        group.add(sphere);
+                        console.log('球体添加到组成功');
+                        
+                        // 创建文本标签
+                        console.log('开始创建SpriteText对象');
+                        const text = new SpriteText(node.name);
+                        console.log('SpriteText对象创建成功');
+                        
+                        text.color = 'white';
+                        text.textHeight = 8;
+                        text.fontSize = 8;
+                        text.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+                        text.padding = 2;
+                        text.borderRadius = 3;
+                        console.log('SpriteText属性设置完成');
+                        
+                        // 根据节点类型设置标签颜色
+                        if (node.type === 'file') {
+                            text.backgroundColor = 'rgba(148, 103, 189, 0.8)'; // 紫色
+                        } else {
+                            const levelColor = colorMap[node.level] || '#cccccc';
+                            // 将十六进制颜色转换为RGB
+                            const r = parseInt(levelColor.slice(1, 3), 16);
+                            const g = parseInt(levelColor.slice(3, 5), 16);
+                            const b = parseInt(levelColor.slice(5, 7), 16);
+                            text.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.8)`;
+                        }
+                        console.log('标签颜色设置完成');
+                        
+                        // 设置标签位置
+                        text.position.y = node.type === 'file' ? 8 : 10;
+                        console.log('标签位置设置完成');
+                        
+                        group.add(text);
+                        console.log('标签添加到组成功');
+                        
+                        console.log('节点对象创建完成:', node.name);
+                        return group;
+                    } catch (error) {
+                        console.error('创建节点对象时出错:', error);
+                        console.error('错误堆栈:', error.stack);
+                        
+                        // 返回一个简单的球体作为后备方案
+                        try {
+                            const geometry = new THREE.SphereGeometry(5, 16, 16);
+                            const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                            return new THREE.Mesh(geometry, material);
+                        } catch (fallbackError) {
+                            console.error('后备方案也失败:', fallbackError);
+                            return null;
+                        }
                     }
-                    
-                    // 设置标签位置
-                    text.position.y = node.type === 'file' ? 8 : 10;
-                    
-                    group.add(text);
-                    
-                    return group;
                 })
                 .onNodeClick(node => {
                     console.log('点击节点:', node.name, node.type);
