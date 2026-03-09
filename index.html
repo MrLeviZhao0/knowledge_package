@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.2.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.3.0</p>
     </div>
     
     <div class="level-indicator">
@@ -607,10 +607,10 @@
                     
                     // 正方体的八个顶点坐标，我们使用其中四个
                     const cubeVertices = [
-                        {x: -15, y: -8, z: -15}, // 左前下
-                        {x: 15, y: -8, z: -15},  // 右前下
-                        {x: -15, y: -8, z: 15},  // 左后下
-                        {x: 15, y: -8, z: 15}    // 右后下
+                        {x: 15, y: 8, z: 15}, // 左前下
+                        {x: -15, y: -8, z: -15},  // 右前下
+                        {x: 15, y: -8, z: -15},  // 左后下
+                        {x: -15, y: 8, z: 15}    // 右后下
                     ];
                     
                     // 使用前四个顶点
@@ -638,37 +638,38 @@
                     const siblingIndex = siblings.findIndex(n => n.id === node.id);
                     
                     // 计算从根节点到父节点的方向向量
-                    const rootToParent = {
-                        x: parentPos.x,
-                        y: parentPos.y,
-                        z: parentPos.z
-                    };
-                    
-                    // 计算父节点相对于根节点的角度和仰角
-                    const horizontalDistance = Math.sqrt(rootToParent.x * rootToParent.x + rootToParent.z * rootToParent.z);
-                    const parentAngle = Math.atan2(rootToParent.z, rootToParent.x);
-                    const parentElevation = Math.atan2(rootToParent.y, horizontalDistance);
-                    
-                    // 计算子节点分布的立体角度范围
-                    const angleRange = Math.PI / 3; // 水平60度范围
-                    const elevationRange = Math.PI / 6; // 垂直30度范围
-                    
-                    const startAngle = parentAngle - angleRange / 2;
-                    const startElevation = parentElevation - elevationRange / 2;
-                    
-                    const angleStep = angleRange / Math.max(siblings.length - 1, 1);
-                    const elevationStep = elevationRange / Math.max(siblings.length - 1, 1);
-                    
-                    const angle = startAngle + siblingIndex * angleStep;
-                    const elevation = startElevation + siblingIndex * elevationStep;
-                    
-                    // 根据层级调整半径
-                    const radius = 8 + level * 2;
-                    
-                    // 计算立体位置
-                    x = parentPos.x + Math.cos(elevation) * Math.cos(angle) * radius;
-                    y = parentPos.y + Math.sin(elevation) * radius;
-                    z = parentPos.z + Math.cos(elevation) * Math.sin(angle) * radius;
+                        const rootToParent = {
+                            x: parentPos.x,
+                            y: parentPos.y,
+                            z: parentPos.z
+                        };
+                        
+                        // 计算父节点相对于根节点的球坐标
+                        const horizontalDistance = Math.sqrt(rootToParent.x * rootToParent.x + rootToParent.z * rootToParent.z);
+                        const parentAngle = Math.atan2(rootToParent.z, rootToParent.x); // 方位角
+                        const parentElevation = Math.atan2(rootToParent.y, horizontalDistance); // 仰角
+                        
+                        // 计算子节点分布的立体角度范围
+                        // 180度乘45度空间：水平180度，垂直45度
+                        const horizontalRange = Math.PI; // 水平180度范围
+                        const verticalRange = Math.PI / 4; // 垂直45度范围
+                        
+                        const startAngle = parentAngle - horizontalRange / 2;
+                        const startElevation = parentElevation - verticalRange / 2;
+                        
+                        const angleStep = horizontalRange / Math.max(siblings.length - 1, 1);
+                        const elevationStep = verticalRange / Math.max(siblings.length - 1, 1);
+                        
+                        const angle = startAngle + siblingIndex * angleStep;
+                        const elevation = startElevation + siblingIndex * elevationStep;
+                        
+                        // 根据层级调整半径
+                        const radius = 8 + level * 2;
+                        
+                        // 计算立体位置（球坐标系转换为笛卡尔坐标系）
+                        x = parentPos.x + Math.cos(elevation) * Math.cos(angle) * radius;
+                        y = parentPos.y + Math.sin(elevation) * radius;
+                        z = parentPos.z + Math.cos(elevation) * Math.sin(angle) * radius;
                 }
                 
                 // 根据子节点数量调整节点大小
@@ -979,20 +980,21 @@
                             z: parentPos.z
                         };
                         
-                        // 计算父节点相对于根节点的角度和仰角
+                        // 计算父节点相对于根节点的球坐标
                         const horizontalDistance = Math.sqrt(rootToParent.x * rootToParent.x + rootToParent.z * rootToParent.z);
-                        const parentAngle = Math.atan2(rootToParent.z, rootToParent.x);
-                        const parentElevation = Math.atan2(rootToParent.y, horizontalDistance);
+                        const parentAngle = Math.atan2(rootToParent.z, rootToParent.x); // 方位角
+                        const parentElevation = Math.atan2(rootToParent.y, horizontalDistance); // 仰角
                         
                         // 计算子节点分布的立体角度范围
-                        const angleRange = Math.PI / 3; // 水平60度范围
-                        const elevationRange = Math.PI / 6; // 垂直30度范围
+                        // 180度乘45度空间：水平180度，垂直45度
+                        const horizontalRange = Math.PI; // 水平180度范围
+                        const verticalRange = Math.PI / 4; // 垂直45度范围
                         
-                        const startAngle = parentAngle - angleRange / 2;
-                        const startElevation = parentElevation - elevationRange / 2;
+                        const startAngle = parentAngle - horizontalRange / 2;
+                        const startElevation = parentElevation - verticalRange / 2;
                         
-                        const angleStep = angleRange / Math.max(siblings.length - 1, 1);
-                        const elevationStep = elevationRange / Math.max(siblings.length - 1, 1);
+                        const angleStep = horizontalRange / Math.max(siblings.length - 1, 1);
+                        const elevationStep = verticalRange / Math.max(siblings.length - 1, 1);
                         
                         const angle = startAngle + siblingIndex * angleStep;
                         const elevation = startElevation + siblingIndex * elevationStep;
@@ -1000,7 +1002,7 @@
                         // 根据层级调整半径
                         const radius = 8 + level * 2;
                         
-                        // 计算立体位置
+                        // 计算立体位置（球坐标系转换为笛卡尔坐标系）
                         x = parentPos.x + Math.cos(elevation) * Math.cos(angle) * radius;
                         y = parentPos.y + Math.sin(elevation) * radius;
                         z = parentPos.z + Math.cos(elevation) * Math.sin(angle) * radius;
