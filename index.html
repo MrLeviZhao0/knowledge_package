@@ -6,6 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <link rel="icon" href="data:,">
     <title>Android知识库 3D 可视化</title>
     <style>
         body {
@@ -181,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.0.2</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.1.0</p>
     </div>
     
     <div class="level-indicator">
@@ -510,10 +511,6 @@
                 // 根据子节点数量调整节点大小
                 const childCount = node.children || 0;
                 const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
-                const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
-                
-                // 调试颜色信息
-                console.log(`节点 ${node.name} (level: ${level}, type: ${node.type}) 使用颜色: ${nodeColor}`);
                 
                 let nodeMesh;
                 if (node.type === 'file') {
@@ -536,9 +533,37 @@
                 
                 // 创建材质
                 const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
-                material.diffuseColor = BABYLON.Color3.FromHexString(nodeColor.substring(1));
+                
+                // 使用RGB值直接创建颜色，而不是FromHexString
+                let babylonColor;
+                if (node.type === 'file') {
+                    // 紫色文件节点: #9467bd -> RGB(148, 103, 189) -> RGB(0.58, 0.40, 0.74)
+                    babylonColor = new BABYLON.Color3(0.58, 0.40, 0.74);
+                } else {
+                    // 根据级别设置目录颜色
+                    switch(level) {
+                        case 0:
+                        case 1:
+                            // 橙色: #ff7f0e -> RGB(255, 127, 14) -> RGB(1.0, 0.50, 0.05)
+                            babylonColor = new BABYLON.Color3(1.0, 0.50, 0.05);
+                            break;
+                        case 2:
+                            // 绿色: #2ca02c -> RGB(44, 160, 44) -> RGB(0.17, 0.63, 0.17)
+                            babylonColor = new BABYLON.Color3(0.17, 0.63, 0.17);
+                            break;
+                        case 3:
+                            // 蓝色: #1f77b4 -> RGB(31, 119, 180) -> RGB(0.12, 0.47, 0.71)
+                            babylonColor = new BABYLON.Color3(0.12, 0.47, 0.71);
+                            break;
+                        default:
+                            // 默认灰色
+                            babylonColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                    }
+                }
+                
+                material.diffuseColor = babylonColor;
                 material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-                material.emissiveColor = BABYLON.Color3.FromHexString(nodeColor.substring(1)).scale(0.2);
+                material.emissiveColor = babylonColor.scale(0.2);
                 nodeMesh.material = material;
                 
                 // 存储节点数据
@@ -740,9 +765,37 @@
                     
                     // 创建材质
                     const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
-                    material.diffuseColor = BABYLON.Color3.FromHexString(nodeColor.substring(1));
+                    
+                    // 使用RGB值直接创建颜色，而不是FromHexString
+                    let babylonColor;
+                    if (node.type === 'file') {
+                        // 紫色文件节点: #9467bd -> RGB(148, 103, 189) -> RGB(0.58, 0.40, 0.74)
+                        babylonColor = new BABYLON.Color3(0.58, 0.40, 0.74);
+                    } else {
+                        // 根据级别设置目录颜色
+                        switch(level) {
+                            case 0:
+                            case 1:
+                                // 橙色: #ff7f0e -> RGB(255, 127, 14) -> RGB(1.0, 0.50, 0.05)
+                                babylonColor = new BABYLON.Color3(1.0, 0.50, 0.05);
+                                break;
+                            case 2:
+                                // 绿色: #2ca02c -> RGB(44, 160, 44) -> RGB(0.17, 0.63, 0.17)
+                                babylonColor = new BABYLON.Color3(0.17, 0.63, 0.17);
+                                break;
+                            case 3:
+                                // 蓝色: #1f77b4 -> RGB(31, 119, 180) -> RGB(0.12, 0.47, 0.71)
+                                babylonColor = new BABYLON.Color3(0.12, 0.47, 0.71);
+                                break;
+                            default:
+                                // 默认灰色
+                                babylonColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                        }
+                    }
+                    
+                    material.diffuseColor = babylonColor;
                     material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-                    material.emissiveColor = BABYLON.Color3.FromHexString(nodeColor.substring(1)).scale(0.2);
+                    material.emissiveColor = babylonColor.scale(0.2);
                     nodeMesh.material = material;
                     
                     // 存储节点数据
