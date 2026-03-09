@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Android知识库 3D 可视化</title>
+    <title>Android知识库 2D 可视化</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -170,15 +170,15 @@
     <div id="graph-container">
         <div id="loading-overlay">
             <div class="loader"></div>
-            <div>正在加载3D可视化...</div>
+            <div>正在加载2D可视化...</div>
             <div style="margin-top: 10px; font-size: 14px;">如果长时间未加载，请检查浏览器控制台是否有错误信息</div>
         </div>
     </div>
     
     <div class="info-panel">
         <h2>Android知识库</h2>
-        <p>这是一个3D可视化展示，用于直观展示Android知识库的结构和内容。</p>
-        <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
+        <p>这是一个2D可视化展示，用于直观展示Android知识库的结构和内容。</p>
+        <p>使用鼠标拖拽移动视图，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
         <p>节点标签始终可见，无需鼠标悬停。</p>
@@ -210,7 +210,7 @@
     </div>
     
     <div class="controls">
-        <button id="reset-view">重置视角</button>
+        <button id="reset-view">重置视图</button>
         <button id="toggle-links">切换连线</button>
         <button id="toggle-labels">切换标签</button>
         <button id="expand-all">展开所有</button>
@@ -219,8 +219,6 @@
 
     <!-- Cytoscape.js CDN -->
     <script src="https://unpkg.com/cytoscape@3.21.0/dist/cytoscape.min.js"></script>
-    <!-- Cytoscape.js 3D layout -->
-    <script src="https://unpkg.com/cytoscape-3d@0.3.0/cytoscape-3d.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -470,7 +468,7 @@
                 file: '#9467bd'     // 紫色 - 文件节点
             };
 
-            console.log('开始创建3D图形');
+            console.log('开始创建2D图形');
 
             // 初始化Cytoscape.js
             const cy = cytoscape({
@@ -516,7 +514,9 @@
                             'color': 'white',
                             'font-size': '12px',
                             'text-outline-width': 2,
-                            'text-outline-color': '#000000'
+                            'text-outline-color': '#000000',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '80px'
                         }
                     },
                     {
@@ -530,33 +530,13 @@
                     }
                 ],
                 layout: {
-                    name: 'preset',
-                    positions: function(node) {
-                        // 根据层级设置位置
-                        const level = node.data('level');
-                        const levelCount = {};
-                        elements.forEach(el => {
-                            if (el.data && el.data.level !== undefined) {
-                                const l = el.data.level;
-                                levelCount[l] = (levelCount[l] || 0) + 1;
-                            }
-                        });
-                        
-                        const levelPositions = {};
-                        let currentPos = 0;
-                        for (let l = 0; l <= 4; l++) {
-                            levelPositions[l] = currentPos;
-                            currentPos += (levelCount[l] || 0) * 50;
-                        }
-                        
-                        const nodesInLevel = elements.filter(el => el.data && el.data.level === level);
-                        const indexInLevel = nodesInLevel.findIndex(n => n.data.id === node.id());
-                        
-                        return {
-                            x: (indexInLevel - nodesInLevel.length / 2) * 100,
-                            y: level * 100
-                        };
-                    }
+                    name: 'breadthfirst',
+                    directed: true,
+                    roots: '#node-0',
+                    padding: 50,
+                    spacingFactor: 1.2,
+                    animate: true,
+                    animationDuration: 500
                 }
             });
             
