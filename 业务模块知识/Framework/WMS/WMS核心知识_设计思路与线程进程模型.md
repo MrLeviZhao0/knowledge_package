@@ -65,6 +65,20 @@ if (!checkAddPermission(attrs, callerUid, callerPackage)) {
 - INTERNAL_SYSTEM_WINDOW：允许显示内部系统窗口
 - TYPE_APPLICATION_OVERLAY：允许显示应用程序覆盖窗口
 
+### 3.5 ATMS与WMS的协同工作机制
+**Activity启动过程中的协作**：
+1. ATMS接收启动请求
+2. ATMS准备启动
+3. ATMS通知WMS
+4. WMS创建窗口
+5. WMS渲染视图
+6. WMS显示窗口
+
+**任务栈管理与窗口层级对应**：
+- TaskRecord对应WindowToken
+- ActivityRecord对应WindowState
+- 任务栈顺序与窗口层级
+
 ## 4. 线程进程模型
 
 ### 4.1 主要线程

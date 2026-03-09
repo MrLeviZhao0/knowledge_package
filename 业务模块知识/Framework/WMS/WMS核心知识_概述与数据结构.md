@@ -1,7 +1,14 @@
 # Android WindowManagerService (WMS) 核心知识
 
 ## 1. 概述
+
 WindowManagerService（WMS）是Android系统中的核心服务之一，负责管理所有应用程序的窗口显示、布局和输入事件分发。WMS与SurfaceFlinger、InputManagerService（IMS）等系统服务紧密协作，共同完成Android系统的UI显示和用户交互功能。
+
+WMS与ATMS（ActivityTaskManagerService）的关系就像戏剧导演和舞台总监：
+- **ATMS**：决定"哪个Activity该上场"（管理Activity生命周期）
+- **WMS**：决定"这个Activity该怎么展示"（管理窗口显示和布局）
+
+两者通过Binder机制协同工作，共同确保Android系统的流畅运行。
 
 ## 2. 主要数据结构
 

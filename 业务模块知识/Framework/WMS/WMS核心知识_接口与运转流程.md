@@ -64,7 +64,81 @@ public interface IWindow extends IInterface {
 - **alpha**：窗口透明度
 - **token**：窗口令牌
 
-### 5.4 adb指令
+### 5.4 窗口添加流程详解
+**应用端流程**：
+```java
+// WindowManagerImpl.java
+@Override
+public void addView(View view, ViewGroup.LayoutParams params) {
+    applyDefaultToken(params);
+    mGlobal.addView(view, params, mDisplay, mParentWindow);
+}
+
+// WindowManagerGlobal.java
+public void addView(View view, ViewGroup.LayoutParams params, 
+                   Display display, Window parentWindow) {
+    // 创建ViewRootImpl
+    root = new ViewRootImpl(view.getContext(), display);
+
+    // 添加到视图列表
+    mViews.add(view);
+    mRoots.add(root);
+    mParams.add(params);
+
+    // 设置视图
+    root.setView(view, params, panelParentView);
+}
+```
+
+**WMS端流程**：
+```java
+// WindowManagerService.java
+public int addWindow(Session session, IWindow client, int seq,
+                    WindowManager.LayoutParams attrs, ...) {
+    // 1. 检查权限
+    int res = mPolicy.checkAddPermission(attrs, appOp);
+
+    // 2. 获取或创建WindowToken
+    WindowToken token = displayContent.getWindowToken(...);
+    if (token == null) {
+        token = new WindowToken(...);
+    }
+
+    // 3. 创建WindowState
+    final WindowState win = new WindowState(this, session, client, 
+                                          token, parentWindow, ...);
+
+    // 4. 添加到窗口管理结构
+    win.attach();
+    mWindowMap.put(client.asBinder(), win);
+
+    return res;
+}
+```
+
+### 5.5 Surface分配流程
+每个窗口都需要一个Surface来绘制内容，Surface的分配过程如下：
+```java
+// WindowState.java
+void openInputChannel(InputChannel outInputChannel) {
+    // 创建输入通道
+    InputChannel[] inputChannels = InputChannel.openInputChannelPair(name);
+    mInputChannel = inputChannels[0];  // 服务端
+    mClientChannel = inputChannels[1]; // 客户端
+
+    // 注册到InputManager
+    mService.mInputManager.registerInputChannel(mInputChannel, mInputWindowHandle);
+}
+```
+
+### 5.6 WMS与SurfaceFlinger的协作
+WMS负责窗口管理，而实际的图形渲染由SurfaceFlinger完成。两者之间的关系可以理解为：
+- **WMS**：决定窗口的位置、大小、层级
+- **SurfaceFlinger**：将窗口内容（Surface）合成并显示到屏幕
+
+这种设计体现了关注点分离的原则，WMS专注于窗口逻辑管理，SurfaceFlinger专注于图形渲染。
+
+### 5.7 adb指令
 **adb shell wm系列指令**：
 ```bash
 # 查看wm指令帮助
