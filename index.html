@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.4.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v3.0.0</p>
     </div>
     
     <div class="level-indicator">
@@ -656,6 +656,104 @@
             
             // 创建场景
             const scene = new BABYLON.Scene(engine);
+            
+            // 物理模拟系统
+            const physicsSystem = {
+                nodes: [],
+                links: [],
+                repulsionForce: 50,    // 斥力强度
+                attractionForce: 0.01,  // 引力强度
+                damping: 0.9,          // 阻尼系数，防止永久振荡
+                minDistance: 5,         // 最小距离，防止斥力过大
+                maxDistance: 100,       // 最大距离，超过此距离不计引力和斥力
+                
+                // 更新节点位置
+                update: function() {
+                    // 计算所有节点受到的力
+                    for (let i = 0; i < this.nodes.length; i++) {
+                        const node = this.nodes[i];
+                        if (!node.mesh || node.level === 0) continue; // 跳过根节点，保持其位置
+                        
+                        let fx = 0, fy = 0, fz = 0;
+                        
+                        // 1. 计算斥力（所有节点之间的斥力）
+                        for (let j = 0; j < this.nodes.length; j++) {
+                            if (i === j) continue;
+                            const other = this.nodes[j];
+                            if (!other.mesh) continue;
+                            
+                            const dx = node.position.x - other.position.x;
+                            const dy = node.position.y - other.position.y;
+                            const dz = node.position.z - other.position.z;
+                            const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+                            
+                            if (distance < this.maxDistance && distance > this.minDistance) {
+                                // 库仑斥力：F = k * q1 * q2 / r^2
+                                const force = this.repulsionForce / (distance * distance);
+                                fx += (dx / distance) * force;
+                                fy += (dy / distance) * force;
+                                fz += (dz / distance) * force;
+                            }
+                        }
+                        
+                        // 2. 计算引力和拉力（只有连接的节点之间）
+                        for (let j = 0; j < this.links.length; j++) {
+                            const link = this.links[j];
+                            let other = null;
+                            
+                            if (link.source === node.id) {
+                                other = this.nodes.find(n => n.id === link.target);
+                            } else if (link.target === node.id) {
+                                other = this.nodes.find(n => n.id === link.source);
+                            }
+                            
+                            if (!other || !other.mesh) continue;
+                            
+                            const dx = other.position.x - node.position.x;
+                            const dy = other.position.y - node.position.y;
+                            const dz = other.position.z - node.position.z;
+                            const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+                            
+                            if (distance > this.minDistance) {
+                                // 胡克定律：F = -k * x
+                                const force = this.attractionForce * distance;
+                                fx += dx * force;
+                                fy += dy * force;
+                                fz += dz * force;
+                            }
+                        }
+                        
+                        // 3. 应用力并更新位置
+                        if (node.mesh) {
+                            const vx = (node.velocity.x || 0) * this.damping + fx;
+                            const vy = (node.velocity.y || 0) * this.damping + fy;
+                            const vz = (node.velocity.z || 0) * this.damping + fz;
+                            
+                            node.velocity = {x: vx, y: vy, z: vz};
+                            
+                            node.mesh.position.x += vx;
+                            node.mesh.position.y += vy;
+                            node.mesh.position.z += vz;
+                        }
+                    }
+                },
+                
+                // 添加节点到物理系统
+                addNode: function(node, mesh) {
+                    this.nodes.push({
+                        id: node.id,
+                        level: node.level,
+                        position: {x: mesh.position.x, y: mesh.position.y, z: mesh.position.z},
+                        velocity: {x: 0, y: 0, z: 0},
+                        mesh: mesh
+                    });
+                },
+                
+                // 添加连接到物理系统
+                addLink: function(sourceId, targetId) {
+                    this.links.push({source: sourceId, target: targetId});
+                }
+            };
             scene.clearColor = new BABYLON.Color4(0.95, 0.95, 0.95, 1);
             
             // 创建相机
@@ -852,6 +950,9 @@
                 // 存储节点数据
                 nodeMesh.metadata = node;
                 
+                // 添加节点到物理系统
+                physicsSystem.addNode(node, nodeMesh);
+                
                 // 创建标签
                 const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
                 labelTexture.hasAlpha = true;
@@ -879,6 +980,11 @@
                 // 存储引用
                 nodeMeshes.push(nodeMesh);
                 labelMeshes.push(labelPlane);
+            });
+            
+            // 添加连接到物理系统
+            graphData.links.forEach(link => {
+                physicsSystem.addLink(link.source, link.target);
             });
             
             // 创建连线
@@ -1031,6 +1137,10 @@
                 nodeMeshes.length = 0;
                 linkLines.length = 0;
                 labelMeshes.length = 0;
+                
+                // 重置物理系统
+                physicsSystem.nodes = [];
+                physicsSystem.links = [];
                 
                 // 重新创建节点和连线
                 newGraphData.nodes.forEach((node, index) => {
@@ -1202,6 +1312,9 @@
                     // 存储节点数据
                     nodeMesh.metadata = node;
                     
+                    // 添加节点到物理系统
+                    physicsSystem.addNode(node, nodeMesh);
+                    
                     // 创建标签
                     const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
                     labelTexture.hasAlpha = true;
@@ -1232,6 +1345,11 @@
                     // 存储引用
                     nodeMeshes.push(nodeMesh);
                     labelMeshes.push(labelPlane);
+                });
+                
+                // 添加连接到物理系统
+                newGraphData.links.forEach(link => {
+                    physicsSystem.addLink(link.source, link.target);
                 });
                 
                 // 创建连线
@@ -1327,6 +1445,43 @@
             
             // 运行渲染循环
             engine.runRenderLoop(() => {
+                // 更新物理系统
+                physicsSystem.update();
+                
+                // 更新连线位置
+                linkLines.forEach((line, index) => {
+                    const link = graphData.links[index];
+                    if (!link) return;
+                    
+                    const sourceMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.source);
+                    const targetMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.target);
+                    
+                    if (sourceMesh && targetMesh) {
+                        const sourcePos = sourceMesh.position;
+                        const targetPos = targetMesh.position;
+                        
+                        // 更新连线位置
+                        const points = [
+                            new BABYLON.Vector3(sourcePos.x, sourcePos.y, sourcePos.z),
+                            new BABYLON.Vector3(targetPos.x, targetPos.y, targetPos.z)
+                        ];
+                        
+                        line.setPoints(points);
+                    }
+                });
+                
+                // 更新标签位置
+                labelMeshes.forEach((label, index) => {
+                    const nodeMesh = nodeMeshes[index];
+                    if (nodeMesh) {
+                        const nodePos = nodeMesh.position;
+                        const nodeSize = nodeMesh.metadata ? 
+                            (nodeMesh.metadata.type === 'file' ? 0.5 : Math.max(0.8, Math.min(2.0, 0.8 + (nodeMesh.metadata.children || 0) * 0.15))) : 1;
+                        
+                        label.position = new BABYLON.Vector3(nodePos.x, nodePos.y + nodeSize + 2, nodePos.z);
+                    }
+                });
+                
                 scene.render();
             });
             
