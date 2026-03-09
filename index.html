@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Android知识库 2D 可视化</title>
+    <title>Android知识库 3D 可视化</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -15,10 +15,10 @@
             background-color: #f0f0f0;
         }
         
-        #graph-container {
+        #renderCanvas {
             width: 100vw;
             height: 100vh;
-            position: relative;
+            touch-action: none;
         }
         
         .info-panel {
@@ -167,18 +167,18 @@
     </style>
 </head>
 <body>
-    <div id="graph-container">
-        <div id="loading-overlay">
-            <div class="loader"></div>
-            <div>正在加载2D可视化...</div>
-            <div style="margin-top: 10px; font-size: 14px;">如果长时间未加载，请检查浏览器控制台是否有错误信息</div>
-        </div>
+    <canvas id="renderCanvas"></canvas>
+    
+    <div id="loading-overlay">
+        <div class="loader"></div>
+        <div>正在加载3D可视化...</div>
+        <div style="margin-top: 10px; font-size: 14px;">如果长时间未加载，请检查浏览器控制台是否有错误信息</div>
     </div>
     
     <div class="info-panel">
         <h2>Android知识库</h2>
-        <p>这是一个2D可视化展示，用于直观展示Android知识库的结构和内容。</p>
-        <p>使用鼠标拖拽移动视图，滚轮缩放，点击节点查看详细信息。</p>
+        <p>这是一个3D可视化展示，用于直观展示Android知识库的结构和内容。</p>
+        <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
         <p>节点标签始终可见，无需鼠标悬停。</p>
@@ -210,36 +210,37 @@
     </div>
     
     <div class="controls">
-        <button id="reset-view">重置视图</button>
+        <button id="reset-view">重置视角</button>
         <button id="toggle-links">切换连线</button>
         <button id="toggle-labels">切换标签</button>
         <button id="expand-all">展开所有</button>
         <button id="collapse-all">折叠所有</button>
     </div>
 
-    <!-- Cytoscape.js CDN -->
-    <script src="https://unpkg.com/cytoscape@3.21.0/dist/cytoscape.min.js"></script>
+    <!-- Babylon.js CDN -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM内容已加载');
             
             // 检查必要的库是否已加载
-            if (typeof cytoscape === 'undefined') {
-                console.error('Cytoscape.js库未加载');
-                document.getElementById('loading-overlay').innerHTML = '<div style="padding: 20px; color: red;">Cytoscape.js库未加载，请检查网络连接</div>';
+            if (typeof BABYLON === 'undefined') {
+                console.error('Babylon.js库未加载');
+                document.getElementById('loading-overlay').innerHTML = '<div style="padding: 20px; color: red;">Babylon.js库未加载，请检查网络连接</div>';
                 return;
             }
             
-            console.log('Cytoscape.js库已加载，开始初始化图形');
+            console.log('Babylon.js库已加载，开始初始化3D图形');
             
             try {
                 initGraph();
-                console.log('图形初始化完成');
+                console.log('3D图形初始化完成');
             } catch (error) {
-                console.error('初始化图形时出错:', error);
+                console.error('初始化3D图形时出错:', error);
                 console.error('错误堆栈:', error.stack);
-                document.getElementById('loading-overlay').innerHTML = `<div style="padding: 20px; color: red;">初始化图形时出错: ${error.message}</div>`;
+                document.getElementById('loading-overlay').innerHTML = `<div style="padding: 20px; color: red;">初始化3D图形时出错: ${error.message}</div>`;
             }
         });
         
@@ -405,37 +406,33 @@
 
             // 将知识库结构转换为图形数据
             function convertToGraphData(data, maxLevel = 3) {
-                const elements = [];
+                const nodes = [];
+                const links = [];
                 let nodeId = 0;
                 
                 // 递归处理节点
                 function processNode(node, parentId = null, visible = true) {
-                    const currentNodeId = `node-${nodeId++}`;
+                    const currentNodeId = `${nodeId++}`;
                     const isVisible = visible && node.level <= maxLevel;
                     
                     // 只添加可见节点
                     if (isVisible) {
                         // 添加节点
-                        elements.push({
-                            data: {
-                                id: currentNodeId,
-                                name: node.name,
-                                path: node.path,
-                                type: node.type,
-                                level: node.level,
-                                parent: parentId,
-                                children: node.children ? node.children.length : 0
-                            }
+                        nodes.push({
+                            id: currentNodeId,
+                            name: node.name,
+                            path: node.path,
+                            type: node.type,
+                            level: node.level,
+                            parent: parentId,
+                            children: node.children ? node.children.length : 0
                         });
                         
                         // 添加连接
                         if (parentId !== null) {
-                            elements.push({
-                                data: {
-                                    id: `edge-${parentId}-${currentNodeId}`,
-                                    source: parentId,
-                                    target: currentNodeId
-                                }
+                            links.push({
+                                source: parentId,
+                                target: currentNodeId
                             });
                         }
                     }
@@ -452,12 +449,12 @@
                 
                 processNode(data);
                 
-                return elements;
+                return { nodes, links };
             }
 
             // 获取图形数据
-            const elements = convertToGraphData(knowledgeBase);
-            console.log('生成的图形数据:', elements);
+            const graphData = convertToGraphData(knowledgeBase);
+            console.log('生成的图形数据:', graphData);
 
             // 颜色映射
             const colorMap = {
@@ -468,81 +465,167 @@
                 file: '#9467bd'     // 紫色 - 文件节点
             };
 
-            console.log('开始创建2D图形');
-
-            // 初始化Cytoscape.js
-            const cy = cytoscape({
-                container: document.getElementById('graph-container'),
-                elements: elements,
-                style: [
-                    {
-                        selector: 'node',
-                        style: {
-                            'label': 'data(name)',
-                            'text-valign': 'center',
-                            'text-halign': 'center',
-                            'background-color': function(node) {
-                                const type = node.data('type');
-                                const level = node.data('level');
-                                if (type === 'file') {
-                                    return colorMap.file;
-                                }
-                                return colorMap[level] || '#cccccc';
-                            },
-                            'width': function(node) {
-                                const type = node.data('type');
-                                if (type === 'file') {
-                                    return 30; // 文件节点较小
-                                }
-                                const level = node.data('level');
-                                const sizeMap = { 0: 60, 1: 50, 2: 40, 3: 30 };
-                                return sizeMap[level] || 25;
-                            },
-                            'height': function(node) {
-                                const type = node.data('type');
-                                if (type === 'file') {
-                                    return 30; // 文件节点较小
-                                }
-                                const level = node.data('level');
-                                const sizeMap = { 0: 60, 1: 50, 2: 40, 3: 30 };
-                                return sizeMap[level] || 25;
-                            },
-                            'shape': function(node) {
-                                const type = node.data('type');
-                                return type === 'file' ? 'triangle' : 'ellipse';
-                            },
-                            'color': 'white',
-                            'font-size': '12px',
-                            'text-outline-width': 2,
-                            'text-outline-color': '#000000',
-                            'text-wrap': 'wrap',
-                            'text-max-width': '80px'
-                        }
-                    },
-                    {
-                        selector: 'edge',
-                        style: {
-                            'width': 2,
-                            'line-color': '#dddddd',
-                            'target-arrow-color': '#dddddd',
-                            'target-arrow-shape': 'none'
-                        }
+            // 创建Babylon.js引擎
+            const canvas = document.getElementById('renderCanvas');
+            const engine = new BABYLON.Engine(canvas, true);
+            
+            // 创建场景
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0.95, 0.95, 0.95, 1);
+            
+            // 创建相机
+            const camera = new BABYLON.ArcRotateCamera('camera', 0, Math.PI / 3, 100, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.lowerRadiusLimit = 20;
+            camera.upperRadiusLimit = 200;
+            
+            // 创建光源
+            const light1 = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+            light1.intensity = 0.7;
+            
+            const light2 = new BABYLON.DirectionalLight('light2', new BABYLON.Vector3(-1, -2, -1), scene);
+            light2.position = new BABYLON.Vector3(20, 40, 20);
+            light2.intensity = 0.3;
+            
+            // 存储节点和连线的引用
+            const nodeMeshes = [];
+            const linkLines = [];
+            const labelMeshes = [];
+            
+            // 创建节点和标签
+            graphData.nodes.forEach((node, index) => {
+                // 计算节点位置（使用简单的层级布局）
+                const level = node.level;
+                const levelNodes = graphData.nodes.filter(n => n.level === level);
+                const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
+                const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
+                const radius = 30 + level * 20;
+                
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const y = -level * 15;
+                
+                // 创建节点
+                const size = node.type === 'file' ? 0.5 : 1.0 - level * 0.1;
+                const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
+                
+                let nodeMesh;
+                if (node.type === 'file') {
+                    // 创建三角形节点（文件）
+                    nodeMesh = BABYLON.MeshBuilder.CreateCylinder(`node-${node.id}`, {
+                        height: 0.3,
+                        diameterTop: 0,
+                        diameterBottom: size * 2,
+                        tessellation: 3
+                    }, scene);
+                } else {
+                    // 创建球形节点（目录）
+                    nodeMesh = BABYLON.MeshBuilder.CreateSphere(`node-${node.id}`, {
+                        diameter: size * 2,
+                        segments: 16
+                    }, scene);
+                }
+                
+                nodeMesh.position = new BABYLON.Vector3(x, y, z);
+                
+                // 创建材质
+                const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
+                material.diffuseColor = BABYLON.Color3.FromHexString(nodeColor.substring(1));
+                material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                material.emissiveColor = BABYLON.Color3.FromHexString(nodeColor.substring(1)).scale(0.2);
+                nodeMesh.material = material;
+                
+                // 存储节点数据
+                nodeMesh.metadata = node;
+                
+                // 创建标签
+                const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
+                labelTexture.hasAlpha = true;
+                
+                const labelContext = labelTexture.getContext();
+                labelContext.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                labelContext.fillRect(0, 0, 256, 64);
+                labelContext.font = '20px Arial';
+                labelContext.fillStyle = 'black';
+                labelContext.textAlign = 'center';
+                labelContext.fillText(node.name, 128, 40);
+                
+                labelTexture.update();
+                
+                const labelMaterial = new BABYLON.StandardMaterial(`labelMat-${node.id}`, scene);
+                labelMaterial.diffuseTexture = labelTexture;
+                labelMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+                labelMaterial.backFaceCulling = false;
+                
+                const labelPlane = BABYLON.MeshBuilder.CreatePlane(`label-${node.id}`, {width: 10, height: 2.5}, scene);
+                labelPlane.position = new BABYLON.Vector3(x, y + size + 2, z);
+                labelPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+                labelPlane.material = labelMaterial;
+                
+                // 存储引用
+                nodeMeshes.push(nodeMesh);
+                labelMeshes.push(labelPlane);
+            });
+            
+            // 创建连线
+            graphData.links.forEach(link => {
+                const sourceNode = graphData.nodes.find(n => n.id === link.source);
+                const targetNode = graphData.nodes.find(n => n.id === link.target);
+                
+                if (sourceNode && targetNode) {
+                    const sourceMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.source);
+                    const targetMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.target);
+                    
+                    if (sourceMesh && targetMesh) {
+                        const line = BABYLON.MeshBuilder.CreateLines(`line-${link.source}-${link.target}`, {
+                            points: [
+                                sourceMesh.position,
+                                targetMesh.position
+                            ]
+                        }, scene);
+                        
+                        const lineMaterial = new BABYLON.StandardMaterial(`lineMat-${link.source}-${link.target}`, scene);
+                        lineMaterial.diffuseColor = new BABYLON.Color3(0.7, 0.7, 0.7);
+                        lineMaterial.emissiveColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+                        line.material = lineMaterial;
+                        
+                        linkLines.push(line);
                     }
-                ],
-                layout: {
-                    name: 'breadthfirst',
-                    directed: true,
-                    roots: '#node-0',
-                    padding: 50,
-                    spacingFactor: 1.2,
-                    animate: true,
-                    animationDuration: 500
+                }
+            });
+            
+            // 处理节点点击事件
+            scene.onPointerObservable.add((pointerInfo) => {
+                if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERDOWN && pointerInfo.pickInfo.hit) {
+                    const pickedMesh = pointerInfo.pickInfo.pickedMesh;
+                    
+                    if (pickedMesh && pickedMesh.metadata) {
+                        const node = pickedMesh.metadata;
+                        console.log('点击节点:', node.name, node.type);
+                        
+                        if (node.type === 'file') {
+                            // 文件节点，跳转到对应文档
+                            window.open(node.path, '_blank');
+                        } else if (node.children > 0) {
+                            // 目录节点，展开/折叠子节点
+                            toggleNodeExpansion(node);
+                        }
+                        
+                        // 显示节点信息
+                        const nodeInfo = document.getElementById('node-info');
+                        document.getElementById('node-title').textContent = node.name;
+                        document.getElementById('node-desc').textContent = 
+                            node.type === 'file' ? 
+                            `文档文件: ${node.path}` : 
+                            `目录节点: ${node.children} 个子项`;
+                        nodeInfo.style.display = 'block';
+                    }
                 }
             });
             
             // 切换节点展开/折叠状态
             function toggleNodeExpansion(node) {
-                console.log('切换节点展开状态:', node.data('name'), node.data('path'));
+                console.log('切换节点展开状态:', node.name, node.path);
                 
                 try {
                     // 在知识库结构中找到对应的节点并更新其展开状态
@@ -565,71 +648,154 @@
                     }
                     
                     // 更新展开状态
-                    findAndUpdateNode(knowledgeBase, node.id(), node.data('path'));
+                    findAndUpdateNode(knowledgeBase, node.id, node.path);
                     
                     // 重新生成图形数据
-                    const newElements = convertToGraphData(knowledgeBase);
-                    console.log('重新生成的图形数据:', newElements);
+                    const newGraphData = convertToGraphData(knowledgeBase);
+                    console.log('重新生成的图形数据:', newGraphData);
                     
                     // 更新图形
-                    cy.json({ elements: newElements });
+                    updateGraph(newGraphData);
                 } catch (error) {
                     console.error('切换节点展开状态时出错:', error);
                 }
             }
             
-            // 节点点击事件
-            cy.on('tap', 'node', function(evt) {
-                const node = evt.target;
-                console.log('点击节点:', node.data('name'), node.data('type'));
+            // 更新图形
+            function updateGraph(newGraphData) {
+                // 清除现有的节点和连线
+                nodeMeshes.forEach(mesh => mesh.dispose());
+                linkLines.forEach(line => line.dispose());
+                labelMeshes.forEach(label => label.dispose());
                 
-                if (node.data('type') === 'file') {
-                    // 文件节点，跳转到对应文档
-                    window.open(node.data('path'), '_blank');
-                } else if (node.data('children') > 0) {
-                    // 目录节点，展开/折叠子节点
-                    toggleNodeExpansion(node);
-                }
+                nodeMeshes.length = 0;
+                linkLines.length = 0;
+                labelMeshes.length = 0;
                 
-                // 显示节点信息
-                const nodeInfo = document.getElementById('node-info');
-                document.getElementById('node-title').textContent = node.data('name');
-                document.getElementById('node-desc').textContent = 
-                    node.data('type') === 'file' ? 
-                    `文档文件: ${node.data('path')}` : 
-                    `目录节点: ${node.data('children')} 个子项`;
-                nodeInfo.style.display = 'block';
-            });
-            
-            // 背景点击事件
-            cy.on('tap', function(evt) {
-                if (evt.target === cy) {
-                    // 隐藏节点信息
-                    document.getElementById('node-info').style.display = 'none';
-                }
-            });
+                // 重新创建节点和连线
+                newGraphData.nodes.forEach((node, index) => {
+                    // 计算节点位置
+                    const level = node.level;
+                    const levelNodes = newGraphData.nodes.filter(n => n.level === level);
+                    const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
+                    const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
+                    const radius = 30 + level * 20;
+                    
+                    const x = Math.cos(angle) * radius;
+                    const z = Math.sin(angle) * radius;
+                    const y = -level * 15;
+                    
+                    // 创建节点
+                    const size = node.type === 'file' ? 0.5 : 1.0 - level * 0.1;
+                    const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
+                    
+                    let nodeMesh;
+                    if (node.type === 'file') {
+                        // 创建三角形节点（文件）
+                        nodeMesh = BABYLON.MeshBuilder.CreateCylinder(`node-${node.id}`, {
+                            height: 0.3,
+                            diameterTop: 0,
+                            diameterBottom: size * 2,
+                            tessellation: 3
+                        }, scene);
+                    } else {
+                        // 创建球形节点（目录）
+                        nodeMesh = BABYLON.MeshBuilder.CreateSphere(`node-${node.id}`, {
+                            diameter: size * 2,
+                            segments: 16
+                        }, scene);
+                    }
+                    
+                    nodeMesh.position = new BABYLON.Vector3(x, y, z);
+                    
+                    // 创建材质
+                    const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
+                    material.diffuseColor = BABYLON.Color3.FromHexString(nodeColor.substring(1));
+                    material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                    material.emissiveColor = BABYLON.Color3.FromHexString(nodeColor.substring(1)).scale(0.2);
+                    nodeMesh.material = material;
+                    
+                    // 存储节点数据
+                    nodeMesh.metadata = node;
+                    
+                    // 创建标签
+                    const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
+                    labelTexture.hasAlpha = true;
+                    
+                    const labelContext = labelTexture.getContext();
+                    labelContext.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    labelContext.fillRect(0, 0, 256, 64);
+                    labelContext.font = '20px Arial';
+                    labelContext.fillStyle = 'black';
+                    labelContext.textAlign = 'center';
+                    labelContext.fillText(node.name, 128, 40);
+                    
+                    labelTexture.update();
+                    
+                    const labelMaterial = new BABYLON.StandardMaterial(`labelMat-${node.id}`, scene);
+                    labelMaterial.diffuseTexture = labelTexture;
+                    labelMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+                    labelMaterial.backFaceCulling = false;
+                    
+                    const labelPlane = BABYLON.MeshBuilder.CreatePlane(`label-${node.id}`, {width: 10, height: 2.5}, scene);
+                    labelPlane.position = new BABYLON.Vector3(x, y + size + 2, z);
+                    labelPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+                    labelPlane.material = labelMaterial;
+                    
+                    // 存储引用
+                    nodeMeshes.push(nodeMesh);
+                    labelMeshes.push(labelPlane);
+                });
+                
+                // 创建连线
+                newGraphData.links.forEach(link => {
+                    const sourceNode = newGraphData.nodes.find(n => n.id === link.source);
+                    const targetNode = newGraphData.nodes.find(n => n.id === link.target);
+                    
+                    if (sourceNode && targetNode) {
+                        const sourceMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.source);
+                        const targetMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.target);
+                        
+                        if (sourceMesh && targetMesh) {
+                            const line = BABYLON.MeshBuilder.CreateLines(`line-${link.source}-${link.target}`, {
+                                points: [
+                                    sourceMesh.position,
+                                    targetMesh.position
+                                ]
+                            }, scene);
+                            
+                            const lineMaterial = new BABYLON.StandardMaterial(`lineMat-${link.source}-${link.target}`, scene);
+                            lineMaterial.diffuseColor = new BABYLON.Color3(0.7, 0.7, 0.7);
+                            lineMaterial.emissiveColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+                            line.material = lineMaterial;
+                            
+                            linkLines.push(line);
+                        }
+                    }
+                });
+            }
             
             // 控制按钮功能
             document.getElementById('reset-view').addEventListener('click', () => {
-                cy.fit();
+                camera.alpha = 0;
+                camera.beta = Math.PI / 3;
+                camera.radius = 100;
             });
 
             let linksVisible = true;
             document.getElementById('toggle-links').addEventListener('click', () => {
                 linksVisible = !linksVisible;
-                cy.style()
-                    .selector('edge')
-                    .style('display', linksVisible ? 'element' : 'none')
-                    .update();
+                linkLines.forEach(line => {
+                    line.setEnabled(linksVisible);
+                });
             });
 
             let labelsVisible = true;
             document.getElementById('toggle-labels').addEventListener('click', () => {
                 labelsVisible = !labelsVisible;
-                cy.style()
-                    .selector('node')
-                    .style('label', labelsVisible ? 'data(name)' : '')
-                    .update();
+                labelMeshes.forEach(label => {
+                    label.setEnabled(labelsVisible);
+                });
             });
 
             // 展开所有节点
@@ -645,8 +811,8 @@
                     
                     setAllExpanded(knowledgeBase, true);
                     
-                    const newElements = convertToGraphData(knowledgeBase, 10); // 展开到10级，相当于全部展开
-                    cy.json({ elements: newElements });
+                    const newGraphData = convertToGraphData(knowledgeBase, 10); // 展开到10级，相当于全部展开
+                    updateGraph(newGraphData);
                 } catch (error) {
                     console.error('展开所有节点时出错:', error);
                 }
@@ -665,11 +831,21 @@
                     
                     setAllExpanded(knowledgeBase, false);
                     
-                    const newElements = convertToGraphData(knowledgeBase, 3); // 只显示3级
-                    cy.json({ elements: newElements });
+                    const newGraphData = convertToGraphData(knowledgeBase, 3); // 只显示3级
+                    updateGraph(newGraphData);
                 } catch (error) {
                     console.error('折叠所有节点时出错:', error);
                 }
+            });
+            
+            // 运行渲染循环
+            engine.runRenderLoop(() => {
+                scene.render();
+            });
+            
+            // 处理窗口大小变化
+            window.addEventListener('resize', () => {
+                engine.resize();
             });
             
             // 隐藏加载消息
