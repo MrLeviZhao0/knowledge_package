@@ -3,14 +3,10 @@
 ## 访问链接
 
 ### 主要链接
-1. **3D可视化页面(简化版)**: https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/main/index_simple.html
-2. **3D可视化页面(完整版)**: https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/main/index.html
-3. **测试页面**: https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/main/test.html
-4. **访问页面**: https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/main/access.html
+1. **3D可视化页面**: https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/main/index.html
 
 ### 备用链接
 1. **原始HTML文件**: https://raw.githubusercontent.com/MrLeviZhao0/knowledge_package/main/index.html
-2. **原始测试页面**: https://raw.githubusercontent.com/MrLeviZhao0/knowledge_package/main/test.html
 
 ## 功能说明
 
@@ -18,7 +14,7 @@
 
 - 3D交互式图形
 - 节点根据层级显示不同颜色和大小
-- 节点标签始终可见，不需要鼠标悬停
+- 节点标签在鼠标悬停时显示
 - 点击目录节点可展开/折叠子节点
 - 点击文档节点可跳转到对应内容
 - 支持视角重置、切换连线、切换标签等控制功能
