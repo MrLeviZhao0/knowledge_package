@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.1.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.2.0</p>
     </div>
     
     <div class="level-indicator">
@@ -224,8 +224,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM内容已加载');
-            
             // 检查必要的库是否已加载
             if (typeof BABYLON === 'undefined') {
                 console.error('Babylon.js库未加载');
@@ -233,11 +231,8 @@
                 return;
             }
             
-            console.log('Babylon.js库已加载，开始初始化3D图形');
-            
             try {
                 initGraph();
-                console.log('3D图形初始化完成');
             } catch (error) {
                 console.error('初始化3D图形时出错:', error);
                 console.error('错误堆栈:', error.stack);
@@ -454,8 +449,7 @@
             }
 
             // 获取图形数据
-            const graphData = convertToGraphData(knowledgeBase);
-            console.log('生成的图形数据:', graphData);
+            const graphData = convertToGraphData(knowledgeBase, 3); // 只显示3级
 
             // 颜色映射
             const colorMap = {
@@ -494,23 +488,62 @@
             const linkLines = [];
             const labelMeshes = [];
             
+            // 获取节点位置的辅助函数
+            function getNodePosition(graphData, nodeId) {
+                const node = graphData.nodes.find(n => n.id === nodeId);
+                if (!node) return {x: 0, y: 0, z: 0};
+                
+                // 如果已经创建了节点，使用其位置
+                const nodeMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === nodeId);
+                if (nodeMesh) {
+                    return {
+                        x: nodeMesh.position.x,
+                        y: nodeMesh.position.y,
+                        z: nodeMesh.position.z
+                    };
+                }
+                
+                // 否则返回默认位置
+                return {x: 0, y: -10 * (node.level || 1), z: 0};
+            }
+            
             // 创建节点和标签
             graphData.nodes.forEach((node, index) => {
-                // 计算节点位置（使用简单的层级布局）
+                // 计算节点位置（使用改进的布局算法）
                 const level = node.level;
-                const levelNodes = graphData.nodes.filter(n => n.level === level);
-                const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
-                const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
-                // 减小半径，使节点间距离更近
-                const radius = 20 + level * 12;
                 
-                const x = Math.cos(angle) * radius;
-                const z = Math.sin(angle) * radius;
-                const y = -level * 10; // 减小层级间距
+                let x, y, z;
+                
+                if (level === 0) {
+                    // 根节点在中心
+                    x = 0;
+                    y = 0;
+                    z = 0;
+                } else {
+                    // 找到父节点
+                    const parentNode = graphData.nodes.find(n => n.id === node.parent);
+                    const parentPos = parentNode ? getNodePosition(graphData, parentNode.id) : {x: 0, y: -10 * (level-1), z: 0};
+                    
+                    // 获取同级节点
+                    const siblings = graphData.nodes.filter(n => n.level === level && n.parent === node.parent);
+                    const siblingIndex = siblings.findIndex(n => n.id === node.id);
+                    
+                    // 计算子节点围绕父节点分布的角度
+                    const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
+                    const angle = siblingIndex * angleStep;
+                    
+                    // 根据层级调整半径，使节点更紧凑
+                    const radius = 8 + level * 3;
+                    
+                    // 计算位置
+                    x = parentPos.x + Math.cos(angle) * radius;
+                    z = parentPos.z + Math.sin(angle) * radius;
+                    y = -level * 6; // 减小层级间距
+                }
                 
                 // 根据子节点数量调整节点大小
                 const childCount = node.children || 0;
-                const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
+                const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(2.0, 0.8 + childCount * 0.15));
                 
                 let nodeMesh;
                 if (node.type === 'file') {
@@ -632,7 +665,6 @@
                     
                     if (pickedMesh && pickedMesh.metadata) {
                         const node = pickedMesh.metadata;
-                        console.log('点击节点:', node.name, node.type, 'level:', node.level);
                         
                         if (node.type === 'file') {
                             // 文件节点，跳转到对应文档
@@ -656,14 +688,11 @@
             
             // 切换节点展开/折叠状态
             function toggleNodeExpansion(node) {
-                console.log('切换节点展开状态:', node.name, node.path);
-                
                 try {
                     // 在知识库结构中找到对应的节点并更新其展开状态
                     function findAndUpdateNode(nodeData, nodeId, path) {
                         if (nodeData.path === path) {
                             nodeData.__expanded = !nodeData.__expanded;
-                            console.log('更新节点展开状态:', nodeData.name, nodeData.__expanded);
                             return true;
                         }
                         
@@ -683,7 +712,6 @@
                     
                     // 重新生成图形数据
                     const newGraphData = convertToGraphData(knowledgeBase);
-                    console.log('重新生成的图形数据:', newGraphData);
                     
                     // 更新图形
                     updateGraph(newGraphData);
@@ -694,6 +722,22 @@
             
             // 更新图形
             function updateGraph(newGraphData) {
+                // 获取更新后节点位置的辅助函数
+                function getUpdatedNodePosition(graphData, nodeId, currentPositions) {
+                    // 如果有保存的位置，使用保存的位置
+                    if (currentPositions.has(nodeId)) {
+                        const pos = currentPositions.get(nodeId);
+                        return {
+                            x: pos.x,
+                            y: pos.y,
+                            z: pos.z
+                        };
+                    }
+                    
+                    // 否则返回默认位置
+                    const node = graphData.nodes.find(n => n.id === nodeId);
+                    return {x: 0, y: -6 * (node ? node.level : 1), z: 0};
+                }
                 // 保存当前节点的位置
                 const currentPositions = new Map();
                 nodeMeshes.forEach(mesh => {
@@ -713,22 +757,41 @@
                 
                 // 重新创建节点和连线
                 newGraphData.nodes.forEach((node, index) => {
-                    // 计算节点位置
+                    // 计算节点位置（使用改进的布局算法）
                     const level = node.level;
-                    const levelNodes = newGraphData.nodes.filter(n => n.level === level);
-                    const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
-                    const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
-                    // 使用与初始创建相同的半径和间距
-                    const radius = 20 + level * 12;
                     
-                    const x = Math.cos(angle) * radius;
-                    const z = Math.sin(angle) * radius;
-                    const y = -level * 10;
+                    let x, y, z;
                     
-                    // 创建节点
+                    if (level === 0) {
+                        // 根节点在中心
+                        x = 0;
+                        y = 0;
+                        z = 0;
+                    } else {
+                        // 找到父节点
+                        const parentNode = newGraphData.nodes.find(n => n.id === node.parent);
+                        const parentPos = parentNode ? getUpdatedNodePosition(newGraphData, parentNode.id, currentPositions) : {x: 0, y: -6 * (level-1), z: 0};
+                        
+                        // 获取同级节点
+                        const siblings = newGraphData.nodes.filter(n => n.level === level && n.parent === node.parent);
+                        const siblingIndex = siblings.findIndex(n => n.id === node.id);
+                        
+                        // 计算子节点围绕父节点分布的角度
+                        const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
+                        const angle = siblingIndex * angleStep;
+                        
+                        // 根据层级调整半径，使节点更紧凑
+                        const radius = 8 + level * 3;
+                        
+                        // 计算位置
+                        x = parentPos.x + Math.cos(angle) * radius;
+                        z = parentPos.z + Math.sin(angle) * radius;
+                        y = -level * 6; // 减小层级间距
+                    }
+                    
                     // 根据子节点数量调整节点大小
                     const childCount = node.children || 0;
-                    const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
+                    const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(2.0, 0.8 + childCount * 0.15));
                     const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
                     
                     // 调试颜色信息
