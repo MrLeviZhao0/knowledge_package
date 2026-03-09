@@ -181,7 +181,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.0.1</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.0.2</p>
     </div>
     
     <div class="level-indicator">
@@ -512,6 +512,9 @@
                 const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
                 const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
                 
+                // 调试颜色信息
+                console.log(`节点 ${node.name} (level: ${level}, type: ${node.type}) 使用颜色: ${nodeColor}`);
+                
                 let nodeMesh;
                 if (node.type === 'file') {
                     // 创建三角形节点（文件）
@@ -702,6 +705,9 @@
                     const childCount = node.children || 0;
                     const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
                     const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
+                    
+                    // 调试颜色信息
+                    console.log(`更新节点 ${node.name} (level: ${level}, type: ${node.type}) 使用颜色: ${nodeColor}`);
                     
                     let nodeMesh;
                     if (node.type === 'file') {
