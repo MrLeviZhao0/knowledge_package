@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v3.0.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v3.1.0</p>
     </div>
     
     <div class="level-indicator">
@@ -242,351 +242,1933 @@
         
         function initGraph() {
             // 知识库数据结构
-            const knowledgeBase = {
-                name: "知识库",
-                path: "",
-                type: "folder",
-                level: 0,
-                children: [
+            const knowledgeBase = {{
+  "name": "知识库",
+  "path": "",
+  "type": "folder",
+  "level": 0,
+  "children": [
+    {
+      "name": "业务模块知识",
+      "path": "业务模块知识",
+      "type": "folder",
+      "level": 1,
+      "children": [
+        {
+          "name": "APM开发",
+          "path": "APM开发",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Hook技术",
+              "path": "APM开发/Hook技术",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "ELF文件格式详解",
+                  "path": "APM开发/Hook技术/ELF文件格式详解.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Hook技术核心原理",
+                  "path": "APM开发/Hook技术/Hook技术核心原理.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Java-Hook技术详解",
+                  "path": "APM开发/Hook技术/Java-Hook技术详解.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Native-Hook技术详解",
+                  "path": "APM开发/Hook技术/Native-Hook技术详解.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "流行Hook框架详解",
+                  "path": "APM开发/Hook技术/流行Hook框架详解.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "兜底回滚",
+              "path": "APM开发/兜底回滚",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "回滚策略实现",
+                  "path": "APM开发/兜底回滚/回滚策略实现.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "客户端兜底策略",
+                  "path": "APM开发/兜底回滚/客户端兜底策略.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "指标监控",
+              "path": "APM开发/指标监控",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "内存监控",
+                  "path": "APM开发/指标监控/内存监控.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "启动性能监控",
+                  "path": "APM开发/指标监控/启动性能监控.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "慢函数监控",
+                  "path": "APM开发/指标监控/慢函数监控.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "稳定性指标监控",
+                  "path": "APM开发/指标监控/稳定性指标监控.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Display",
+          "path": "Display",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "DRM",
+              "path": "Display/DRM",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "DRM_KMS核心知识_主要功能与优化",
+                  "path": "Display/DRM/DRM_KMS核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "DRM_KMS核心知识_接口与运转流程",
+                  "path": "Display/DRM/DRM_KMS核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "DRM_KMS核心知识_概述与数据结构",
+                  "path": "Display/DRM/DRM_KMS核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "DRM_KMS核心知识_设计思路与线程进程模型",
+                  "path": "Display/DRM/DRM_KMS核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "bringup",
+              "path": "Display/bringup",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "Display Bringup厂商技术面试技巧",
+                  "path": "Display/bringup/Display Bringup厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Display Bringup核心知识_主要功能与优化",
+                  "path": "Display/bringup/Display Bringup核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Display Bringup核心知识_接口与运转流程",
+                  "path": "Display/bringup/Display Bringup核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Display Bringup核心知识_概述与数据结构",
+                  "path": "Display/bringup/Display Bringup核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Display Bringup核心知识_设计思路与线程进程模型",
+                  "path": "Display/bringup/Display Bringup核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Display Bringup项目经验",
+                  "path": "Display/bringup/Display Bringup项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "displayfeature",
+              "path": "Display/displayfeature",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "displayfeature核心知识_概述与数据结构",
+                  "path": "Display/displayfeature/displayfeature核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "displayfeature核心知识_设计思路与实现技术",
+                  "path": "Display/displayfeature/displayfeature核心知识_设计思路与实现技术.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "fence",
+              "path": "Display/fence",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "fence核心知识_主要功能与优化",
+                  "path": "Display/fence/fence核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "fence核心知识_接口与运转流程",
+                  "path": "Display/fence/fence核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "fence核心知识_概述与数据结构",
+                  "path": "Display/fence/fence核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "fence核心知识_设计思路与线程进程模型",
+                  "path": "Display/fence/fence核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "fence项目经验",
+                  "path": "Display/fence/fence项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "kgsl",
+              "path": "Display/kgsl",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "KGSL厂商技术面试技巧",
+                  "path": "Display/kgsl/KGSL厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "KGSL核心知识_主要功能与优化",
+                  "path": "Display/kgsl/KGSL核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "KGSL核心知识_接口与运转流程",
+                  "path": "Display/kgsl/KGSL核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "KGSL核心知识_概述与数据结构",
+                  "path": "Display/kgsl/KGSL核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "KGSL核心知识_设计思路与线程进程模型",
+                  "path": "Display/kgsl/KGSL核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "KGSL项目经验",
+                  "path": "Display/kgsl/KGSL项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "panel",
+              "path": "Display/panel",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "panel核心知识_AOD与超分技术",
+                  "path": "Display/panel/panel核心知识_AOD与超分技术.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "panel核心知识_概述与数据结构",
+                  "path": "Display/panel/panel核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "panel核心知识_设计思路与线程进程模型",
+                  "path": "Display/panel/panel核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "从View到Display的流转核心知识",
+              "path": "Display/从View到Display的流转核心知识.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "合成",
+              "path": "Display/合成",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "SurfaceFlinger厂商技术面试技巧",
+                  "path": "Display/合成/SurfaceFlinger厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SurfaceFlinger核心知识_主要功能与优化",
+                  "path": "Display/合成/SurfaceFlinger核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SurfaceFlinger核心知识_接口与运转流程",
+                  "path": "Display/合成/SurfaceFlinger核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SurfaceFlinger核心知识_概述与数据结构",
+                  "path": "Display/合成/SurfaceFlinger核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SurfaceFlinger核心知识_设计思路与线程进程模型",
+                  "path": "Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SurfaceFlinger项目经验",
+                  "path": "Display/合成/SurfaceFlinger项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "显存",
+              "path": "Display/显存",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "显存核心知识_异常案例与解决方法",
+                  "path": "Display/显存/显存核心知识_异常案例与解决方法.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "显存核心知识_概述与数据结构",
+                  "path": "Display/显存/显存核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "显存核心知识_申请通路与实例",
+                  "path": "Display/显存/显存核心知识_申请通路与实例.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "显存核心知识_监控实现与水位管理",
+                  "path": "Display/显存/显存核心知识_监控实现与水位管理.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "显存核心知识_获取指令与指标分析",
+                  "path": "Display/显存/显存核心知识_获取指令与指标分析.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Framework",
+          "path": "Framework",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "AMS",
+              "path": "Framework/AMS",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "AMS厂商技术面试技巧",
+                  "path": "Framework/AMS/AMS厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AMS核心知识_主要功能与优化",
+                  "path": "Framework/AMS/AMS核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AMS核心知识_接口与运转流程",
+                  "path": "Framework/AMS/AMS核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AMS核心知识_概述与数据结构",
+                  "path": "Framework/AMS/AMS核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AMS核心知识_设计思路与线程进程模型",
+                  "path": "Framework/AMS/AMS核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AMS项目经验",
+                  "path": "Framework/AMS/AMS项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "Choreographer",
+              "path": "Framework/Choreographer",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "Choreographer厂商技术面试技巧",
+                  "path": "Framework/Choreographer/Choreographer厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Choreographer核心知识_主要功能与优化",
+                  "path": "Framework/Choreographer/Choreographer核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Choreographer核心知识_接口与运转流程",
+                  "path": "Framework/Choreographer/Choreographer核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Choreographer核心知识_概述与数据结构",
+                  "path": "Framework/Choreographer/Choreographer核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Choreographer核心知识_设计思路与线程进程模型",
+                  "path": "Framework/Choreographer/Choreographer核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Choreographer项目经验",
+                  "path": "Framework/Choreographer/Choreographer项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "IMS",
+              "path": "Framework/IMS",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "IMS厂商技术面试技巧",
+                  "path": "Framework/IMS/IMS厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS核心知识_主要功能与优化",
+                  "path": "Framework/IMS/IMS核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS核心知识_接口与运转流程",
+                  "path": "Framework/IMS/IMS核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS核心知识_概述与数据结构",
+                  "path": "Framework/IMS/IMS核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS核心知识_设计思路与线程进程模型",
+                  "path": "Framework/IMS/IMS核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS模块知识体系Skill文档",
+                  "path": "Framework/IMS/IMS模块知识体系Skill文档.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "IMS项目经验",
+                  "path": "Framework/IMS/IMS项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "PKMS",
+              "path": "Framework/PKMS",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "PKMS厂商技术面试技巧",
+                  "path": "Framework/PKMS/PKMS厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "PKMS核心知识_主要功能与优化",
+                  "path": "Framework/PKMS/PKMS核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "PKMS核心知识_接口与运转流程",
+                  "path": "Framework/PKMS/PKMS核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "PKMS核心知识_概述与数据结构",
+                  "path": "Framework/PKMS/PKMS核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "PKMS核心知识_设计思路与线程进程模型",
+                  "path": "Framework/PKMS/PKMS核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "PKMS项目经验",
+                  "path": "Framework/PKMS/PKMS项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "SystemProperty",
+              "path": "Framework/SystemProperty",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "SystemProperty厂商技术面试技巧",
+                  "path": "Framework/SystemProperty/SystemProperty厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SystemProperty核心知识_主要功能与优化",
+                  "path": "Framework/SystemProperty/SystemProperty核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SystemProperty核心知识_接口与运转流程",
+                  "path": "Framework/SystemProperty/SystemProperty核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SystemProperty核心知识_概述与数据结构",
+                  "path": "Framework/SystemProperty/SystemProperty核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SystemProperty核心知识_设计思路与线程进程模型",
+                  "path": "Framework/SystemProperty/SystemProperty核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SystemProperty项目经验",
+                  "path": "Framework/SystemProperty/SystemProperty项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "WMS",
+              "path": "Framework/WMS",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "WMS_skill_doc",
+                  "path": "Framework/WMS/WMS_skill_doc.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS厂商技术面试技巧",
+                  "path": "Framework/WMS/WMS厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS核心知识_主要功能与优化",
+                  "path": "Framework/WMS/WMS核心知识_主要功能与优化.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS核心知识_接口与运转流程",
+                  "path": "Framework/WMS/WMS核心知识_接口与运转流程.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS核心知识_概述与数据结构",
+                  "path": "Framework/WMS/WMS核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS核心知识_设计思路与线程进程模型",
+                  "path": "Framework/WMS/WMS核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "WMS项目经验",
+                  "path": "Framework/WMS/WMS项目经验.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "左右手模式核心知识_概述与数据结构",
+                  "path": "Framework/WMS/左右手模式核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "亮灭屏模块",
+              "path": "Framework/亮灭屏模块",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "AON",
+                  "path": "Framework/亮灭屏模块/AON",
+                  "type": "folder",
+                  "level": 3,
+                  "children": [
                     {
-                        name: "业务模块知识",
-                        path: "业务模块知识",
-                        type: "folder",
-                        level: 1,
-                        children: [
-                            {
-                                name: "Framework",
-                                path: "业务模块知识/Framework",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    {
-                                        name: "WMS",
-                                        path: "业务模块知识/Framework/WMS",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "WMS核心知识_概述与数据结构", path: "业务模块知识/Framework/WMS/WMS核心知识_概述与数据结构.md", type: "file", level: 4 },
-                                            { name: "WMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Framework/WMS/WMS核心知识_设计思路与线程进程模型.md", type: "file", level: 4 },
-                                            { name: "WMS核心知识_接口与运转流程", path: "业务模块知识/Framework/WMS/WMS核心知识_接口与运转流程.md", type: "file", level: 4 },
-                                            { name: "WMS核心知识_主要功能与优化", path: "业务模块知识/Framework/WMS/WMS核心知识_主要功能与优化.md", type: "file", level: 4 },
-                                            { name: "WMS项目经验", path: "业务模块知识/Framework/WMS/WMS项目经验.md", type: "file", level: 4 },
-                                            { name: "WMS厂商技术面试技巧", path: "业务模块知识/Framework/WMS/WMS厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    },
-                                    {
-                                        name: "IMS",
-                                        path: "业务模块知识/Framework/IMS",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "IMS核心知识_概述与数据结构", path: "业务模块知识/Framework/IMS/IMS核心知识_概述与数据结构.md", type: "file", level: 4 },
-                                            { name: "IMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Framework/IMS/IMS核心知识_设计思路与线程进程模型.md", type: "file", level: 4 },
-                                            { name: "IMS核心知识_接口与运转流程", path: "业务模块知识/Framework/IMS/IMS核心知识_接口与运转流程.md", type: "file", level: 4 },
-                                            { name: "IMS核心知识_主要功能与优化", path: "业务模块知识/Framework/IMS/IMS核心知识_主要功能与优化.md", type: "file", level: 4 },
-                                            { name: "IMS项目经验", path: "业务模块知识/Framework/IMS/IMS项目经验.md", type: "file", level: 4 },
-                                            { name: "IMS厂商技术面试技巧", path: "业务模块知识/Framework/IMS/IMS厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    },
-                                    {
-                                        name: "AMS",
-                                        path: "业务模块知识/Framework/AMS",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "AMS核心知识_概述与数据结构", path: "业务模块知识/Framework/AMS/AMS核心知识_概述与数据结构.md", type: "file", level: 4 },
-                                            { name: "AMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Framework/AMS/AMS核心知识_设计思路与线程进程模型.md", type: "file", level: 4 },
-                                            { name: "AMS核心知识_接口与运转流程", path: "业务模块知识/Framework/AMS/AMS核心知识_接口与运转流程.md", type: "file", level: 4 },
-                                            { name: "AMS核心知识_主要功能与优化", path: "业务模块知识/Framework/AMS/AMS核心知识_主要功能与优化.md", type: "file", level: 4 },
-                                            { name: "AMS项目经验", path: "业务模块知识/Framework/AMS/AMS项目经验.md", type: "file", level: 4 },
-                                            { name: "AMS厂商技术面试技巧", path: "业务模块知识/Framework/AMS/AMS厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    },
-                                    {
-                                        name: "Display",
-                                        path: "业务模块知识/Display",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            {
-                                                name: "合成",
-                                                path: "业务模块知识/Display/合成",
-                                                type: "folder",
-                                                level: 4,
-                                                children: [
-                                                    { name: "SurfaceFlinger核心知识_概述与数据结构", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md", type: "file", level: 5 },
-                                                    { name: "SurfaceFlinger核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md", type: "file", level: 5 },
-                                                    { name: "SurfaceFlinger核心知识_接口与运转流程", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md", type: "file", level: 5 },
-                                                    { name: "SurfaceFlinger核心知识_主要功能与优化", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md", type: "file", level: 5 },
-                                                    { name: "SurfaceFlinger项目经验", path: "业务模块知识/Display/合成/SurfaceFlinger项目经验.md", type: "file", level: 5 },
-                                                    { name: "SurfaceFlinger厂商技术面试技巧", path: "业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md", type: "file", level: 5 }
-                                                ]
-                                            },
-                                            {
-                                                name: "DRM",
-                                                path: "业务模块知识/Display/DRM",
-                                                type: "folder",
-                                                level: 4,
-                                                children: [
-                                                    { name: "DRM_KMS核心知识_概述与数据结构", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_概述与数据结构.md", type: "file", level: 5 },
-                                                    { name: "DRM_KMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_设计思路与线程进程模型.md", type: "file", level: 5 },
-                                                    { name: "DRM_KMS核心知识_接口与运转流程", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_接口与运转流程.md", type: "file", level: 5 },
-                                                    { name: "DRM_KMS核心知识_主要功能与优化", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_主要功能与优化.md", type: "file", level: 5 }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                name: "APM开发",
-                                path: "业务模块知识/APM开发",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    {
-                                        name: "Hook技术",
-                                        path: "业务模块知识/APM开发/Hook技术",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "ELF文件格式详解", path: "业务模块知识/APM开发/Hook技术/ELF文件格式详解.md", type: "file", level: 4 },
-                                            { name: "Hook技术核心原理", path: "业务模块知识/APM开发/Hook技术/Hook技术核心原理.md", type: "file", level: 4 },
-                                            { name: "Java-Hook技术详解", path: "业务模块知识/APM开发/Hook技术/Java-Hook技术详解.md", type: "file", level: 4 },
-                                            { name: "Native-Hook技术详解", path: "业务模块知识/APM开发/Hook技术/Native-Hook技术详解.md", type: "file", level: 4 },
-                                            { name: "流行Hook框架详解", path: "业务模块知识/APM开发/Hook技术/流行Hook框架详解.md", type: "file", level: 4 }
-                                        ]
-                                    },
-                                    {
-                                        name: "兜底回滚",
-                                        path: "业务模块知识/APM开发/兜底回滚",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "回滚策略实现", path: "业务模块知识/APM开发/兜底回滚/回滚策略实现.md", type: "file", level: 4 },
-                                            { name: "客户端兜底策略", path: "业务模块知识/APM开发/兜底回滚/客户端兜底策略.md", type: "file", level: 4 }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                      "name": "AON厂商技术面试技巧",
+                      "path": "Framework/亮灭屏模块/AON/AON厂商技术面试技巧.md",
+                      "type": "file",
+                      "level": 4
                     },
                     {
-                        name: "基础与面试",
-                        path: "基础与面试",
-                        type: "folder",
-                        level: 1,
-                        children: [
-                            {
-                                name: "app基础",
-                                path: "基础与面试/app基础",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    {
-                                        name: "binder",
-                                        path: "基础与面试/app基础/binder",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "binder核心知识", path: "基础与面试/app基础/binder/binder核心知识.md", type: "file", level: 4 },
-                                            { name: "binder项目经验", path: "基础与面试/app基础/binder/binder项目经验.md", type: "file", level: 4 },
-                                            { name: "binder厂商技术面试技巧", path: "基础与面试/app基础/binder/binder厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    },
-                                    {
-                                        name: "handler",
-                                        path: "基础与面试/app基础/handler",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "handler核心知识", path: "基础与面试/app基础/handler/handler核心知识.md", type: "file", level: 4 },
-                                            { name: "handler项目经验", path: "基础与面试/app基础/handler/handler项目经验.md", type: "file", level: 4 },
-                                            { name: "handler厂商技术面试技巧", path: "基础与面试/app基础/handler/handler厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                name: "bsp基础",
-                                path: "基础与面试/bsp基础",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    {
-                                        name: "ioctl",
-                                        path: "基础与面试/bsp基础/ioctl",
-                                        type: "folder",
-                                        level: 3,
-                                        children: [
-                                            { name: "Ioctl核心知识", path: "基础与面试/bsp基础/ioctl/Ioctl核心知识.md", type: "file", level: 4 },
-                                            { name: "Ioctl项目经验", path: "基础与面试/bsp基础/ioctl/Ioctl项目经验.md", type: "file", level: 4 },
-                                            { name: "Ioctl厂商技术面试技巧", path: "基础与面试/bsp基础/ioctl/Ioctl厂商技术面试技巧.md", type: "file", level: 4 }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                      "name": "AON核心知识",
+                      "path": "Framework/亮灭屏模块/AON/AON核心知识.md",
+                      "type": "file",
+                      "level": 4
                     },
                     {
-                        name: "项目经验",
-                        path: "项目经验",
-                        type: "folder",
-                        level: 1,
-                        children: [
-                            {
-                                name: "WMS项目经验",
-                                path: "项目经验/WMS项目经验",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "小米-WMS模块维护与升级项目", path: "项目经验/小米-WMS模块维护与升级项目.md", type: "file", level: 3 },
-                                    { name: "WMS项目经验案例2", path: "项目经验/WMS项目经验/WMS项目经验案例2.md", type: "file", level: 3 },
-                                    { name: "WMS项目经验案例3", path: "项目经验/WMS项目经验/WMS项目经验案例3.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "Display项目经验",
-                                path: "项目经验/Display项目经验",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "OPPO-低延迟显示技术项目", path: "项目经验/OPPO-低延迟显示技术项目.md", type: "file", level: 3 },
-                                    { name: "追觅-DVSYNC渲染优化项目", path: "项目经验/追觅-DVSYNC渲染优化项目.md", type: "file", level: 3 },
-                                    { name: "Display项目经验案例3", path: "项目经验/Display项目经验/Display项目经验案例3.md", type: "file", level: 3 }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        name: "语言技巧知识",
-                        path: "语言技巧知识",
-                        type: "folder",
-                        level: 1,
-                        children: [
-                            {
-                                name: "ViberCoding",
-                                path: "语言技巧知识/ViberCoding",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "Android开发MCP工具推荐", path: "语言技巧知识/ViberCoding/Android开发MCP工具推荐.md", type: "file", level: 3 },
-                                    { name: "ViberCoding知识库", path: "语言技巧知识/ViberCoding/ViberCoding知识库.md", type: "file", level: 3 },
-                                    { name: "大语言模型原理深度解析", path: "语言技巧知识/ViberCoding/大语言模型原理深度解析.md", type: "file", level: 3 },
-                                    { name: "模型演进历程", path: "语言技巧知识/ViberCoding/模型演进历程-CNN-RNN-Transformer-Diffusion.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "aarch64",
-                                path: "语言技巧知识/aarch64",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "SIMD编程", path: "语言技巧知识/aarch64/SIMD编程.md", type: "file", level: 3 },
-                                    { name: "内存优化", path: "语言技巧知识/aarch64/内存优化.md", type: "file", level: 3 },
-                                    { name: "内存模型", path: "语言技巧知识/aarch64/内存模型.md", type: "file", level: 3 },
-                                    { name: "函数调用约定", path: "语言技巧知识/aarch64/函数调用约定.md", type: "file", level: 3 },
-                                    { name: "加密算法识别", path: "语言技巧知识/aarch64/加密算法识别.md", type: "file", level: 3 },
-                                    { name: "反汇编分析", path: "语言技巧知识/aarch64/反汇编分析.md", type: "file", level: 3 },
-                                    { name: "寄存器系统", path: "语言技巧知识/aarch64/寄存器系统.md", type: "file", level: 3 },
-                                    { name: "异常处理", path: "语言技巧知识/aarch64/异常处理.md", type: "file", level: 3 },
-                                    { name: "循环优化", path: "语言技巧知识/aarch64/循环优化.md", type: "file", level: 3 },
-                                    { name: "性能优化", path: "语言技巧知识/aarch64/性能优化.md", type: "file", level: 3 },
-                                    { name: "指令集基础", path: "语言技巧知识/aarch64/指令集基础.md", type: "file", level: 3 },
-                                    { name: "系统调用分析", path: "语言技巧知识/aarch64/系统调用分析.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "cpp",
-                                path: "语言技巧知识/cpp",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "语法基础", path: "语言技巧知识/cpp/语法基础.md", type: "file", level: 3 },
-                                    { name: "常见问题", path: "语言技巧知识/cpp/常见问题.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "java",
-                                path: "语言技巧知识/java",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "语法基础", path: "语言技巧知识/java/语法基础.md", type: "file", level: 3 },
-                                    { name: "面向对象", path: "语言技巧知识/java/面向对象.md", type: "file", level: 3 },
-                                    { name: "集合框架", path: "语言技巧知识/java/集合框架.md", type: "file", level: 3 },
-                                    { name: "异常处理", path: "语言技巧知识/java/异常处理.md", type: "file", level: 3 },
-                                    { name: "常见问题", path: "语言技巧知识/java/常见问题.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "kotlin",
-                                path: "语言技巧知识/kotlin",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "Android开发", path: "语言技巧知识/kotlin/Android开发.md", type: "file", level: 3 },
-                                    { name: "Compose基础", path: "语言技巧知识/kotlin/Compose基础.md", type: "file", level: 3 },
-                                    { name: "与Java对比", path: "语言技巧知识/kotlin/与Java对比.md", type: "file", level: 3 },
-                                    { name: "主题和动画", path: "语言技巧知识/kotlin/主题和动画.md", type: "file", level: 3 },
-                                    { name: "代码练习", path: "语言技巧知识/kotlin/代码练习.md", type: "file", level: 3 },
-                                    { name: "函数式编程", path: "语言技巧知识/kotlin/函数式编程.md", type: "file", level: 3 },
-                                    { name: "协程编程", path: "语言技巧知识/kotlin/协程编程.md", type: "file", level: 3 },
-                                    { name: "委托属性", path: "语言技巧知识/kotlin/委托属性.md", type: "file", level: 3 },
-                                    { name: "导航和架构", path: "语言技巧知识/kotlin/导航和架构.md", type: "file", level: 3 },
-                                    { name: "常见问题", path: "语言技巧知识/kotlin/常见问题.md", type: "file", level: 3 },
-                                    { name: "性能优化", path: "语言技巧知识/kotlin/性能优化.md", type: "file", level: 3 },
-                                    { name: "扩展函数", path: "语言技巧知识/kotlin/扩展函数.md", type: "file", level: 3 },
-                                    { name: "状态管理", path: "语言技巧知识/kotlin/状态管理.md", type: "file", level: 3 },
-                                    { name: "空安全机制", path: "语言技巧知识/kotlin/空安全机制.md", type: "file", level: 3 },
-                                    { name: "语法基础", path: "语言技巧知识/kotlin/语法基础.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "rust",
-                                path: "语言技巧知识/rust",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "Android集成", path: "语言技巧知识/rust/Android集成.md", type: "file", level: 3 },
-                                    { name: "与C++对比", path: "语言技巧知识/rust/与C++对比.md", type: "file", level: 3 },
-                                    { name: "代码练习", path: "语言技巧知识/rust/代码练习.md", type: "file", level: 3 },
-                                    { name: "常见问题", path: "语言技巧知识/rust/常见问题.md", type: "file", level: 3 },
-                                    { name: "并发编程", path: "语言技巧知识/rust/并发编程.md", type: "file", level: 3 },
-                                    { name: "性能优化", path: "语言技巧知识/rust/性能优化.md", type: "file", level: 3 },
-                                    { name: "所有权系统", path: "语言技巧知识/rust/所有权系统.md", type: "file", level: 3 },
-                                    { name: "类型系统", path: "语言技巧知识/rust/类型系统.md", type: "file", level: 3 },
-                                    { name: "语法基础", path: "语言技巧知识/rust/语法基础.md", type: "file", level: 3 },
-                                    { name: "项目实战", path: "语言技巧知识/rust/项目实战.md", type: "file", level: 3 },
-                                    { name: "高级特性", path: "语言技巧知识/rust/高级特性.md", type: "file", level: 3 }
-                                ]
-                            },
-                            {
-                                name: "smali",
-                                path: "语言技巧知识/smali",
-                                type: "folder",
-                                level: 2,
-                                children: [
-                                    { name: "Apktool使用", path: "语言技巧知识/smali/Apktool使用.md", type: "file", level: 3 },
-                                    { name: "Frida使用", path: "语言技巧知识/smali/Frida使用.md", type: "file", level: 3 },
-                                    { name: "Jadx使用", path: "语言技巧知识/smali/Jadx使用.md", type: "file", level: 3 },
-                                    { name: "代码分析", path: "语言技巧知识/smali/代码分析.md", type: "file", level: 3 },
-                                    { name: "反编译原理", path: "语言技巧知识/smali/反编译原理.md", type: "file", level: 3 },
-                                    { name: "反调试技术", path: "语言技巧知识/smali/反调试技术.md", type: "file", level: 3 },
-                                    { name: "日志插桩", path: "语言技巧知识/smali/日志插桩.md", type: "file", level: 3 },
-                                    { name: "权限检查", path: "语言技巧知识/smali/权限检查.md", type: "file", level: 3 },
-                                    { name: "混淆对抗", path: "语言技巧知识/smali/混淆对抗.md", type: "file", level: 3 },
-                                    { name: "签名验证", path: "语言技巧知识/smali/签名验证.md", type: "file", level: 3 },
-                                    { name: "类型系统", path: "语言技巧知识/smali/类型系统.md", type: "file", level: 3 },
-                                    { name: "行为监控", path: "语言技巧知识/smali/行为监控.md", type: "file", level: 3 },
-                                    { name: "语法基础", path: "语言技巧知识/smali/语法基础.md", type: "file", level: 3 },
-                                    { name: "资源保护", path: "语言技巧知识/smali/资源保护.md", type: "file", level: 3 }
-                                ]
-                            }
-                        ]
+                      "name": "AON项目经验",
+                      "path": "Framework/亮灭屏模块/AON/AON项目经验.md",
+                      "type": "file",
+                      "level": 4
                     }
-                ]
-            };
+                  ]
+                },
+                {
+                  "name": "DMS",
+                  "path": "Framework/亮灭屏模块/DMS",
+                  "type": "folder",
+                  "level": 3,
+                  "children": [
+                    {
+                      "name": "DMS厂商技术面试技巧",
+                      "path": "Framework/亮灭屏模块/DMS/DMS厂商技术面试技巧.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "DMS核心知识",
+                      "path": "Framework/亮灭屏模块/DMS/DMS核心知识.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "DMS项目经验",
+                      "path": "Framework/亮灭屏模块/DMS/DMS项目经验.md",
+                      "type": "file",
+                      "level": 4
+                    }
+                  ]
+                },
+                {
+                  "name": "PMS",
+                  "path": "Framework/亮灭屏模块/PMS",
+                  "type": "folder",
+                  "level": 3,
+                  "children": [
+                    {
+                      "name": "PMS厂商技术面试技巧",
+                      "path": "Framework/亮灭屏模块/PMS/PMS厂商技术面试技巧.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "PMS核心知识",
+                      "path": "Framework/亮灭屏模块/PMS/PMS核心知识.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "PMS项目经验",
+                      "path": "Framework/亮灭屏模块/PMS/PMS项目经验.md",
+                      "type": "file",
+                      "level": 4
+                    }
+                  ]
+                },
+                {
+                  "name": "Thermal",
+                  "path": "Framework/亮灭屏模块/Thermal",
+                  "type": "folder",
+                  "level": 3,
+                  "children": [
+                    {
+                      "name": "Thermal厂商技术面试技巧",
+                      "path": "Framework/亮灭屏模块/Thermal/Thermal厂商技术面试技巧.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "Thermal核心知识",
+                      "path": "Framework/亮灭屏模块/Thermal/Thermal核心知识.md",
+                      "type": "file",
+                      "level": 4
+                    },
+                    {
+                      "name": "Thermal项目经验",
+                      "path": "Framework/亮灭屏模块/Thermal/Thermal项目经验.md",
+                      "type": "file",
+                      "level": 4
+                    }
+                  ]
+                },
+                {
+                  "name": "亮灭屏模块知识体系Skill文档",
+                  "path": "Framework/亮灭屏模块/亮灭屏模块知识体系Skill文档.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "业务模块知识体系通用Skill文档模板",
+          "path": "业务模块知识体系通用Skill文档模板.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "性能",
+          "path": "性能",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "性能优化方法论",
+              "path": "性能/性能优化方法论.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "性能知识体系",
+              "path": "性能/性能知识体系.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "真实案例库",
+              "path": "性能/真实案例库.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "游戏开发",
+          "path": "游戏开发",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "开源游戏列表",
+              "path": "游戏开发/开源游戏列表.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "游戏引擎",
+              "path": "游戏开发/游戏引擎",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "libGDX使用案例",
+                  "path": "游戏开发/游戏引擎/libGDX使用案例.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "稳定性",
+          "path": "稳定性",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "NE信号类型详解",
+              "path": "稳定性/NE信号类型详解.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "真实案例库",
+              "path": "稳定性/真实案例库.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "稳定性监控框架与实现原理",
+              "path": "稳定性/稳定性监控框架与实现原理.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "稳定性知识体系",
+              "path": "稳定性/稳定性知识体系.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "绘制渲染",
+          "path": "绘制渲染",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "DeliQueue核心知识",
+              "path": "绘制渲染/DeliQueue核心知识.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "GLES",
+              "path": "绘制渲染/GLES",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "GLES核心知识_概述与数据结构",
+                  "path": "绘制渲染/GLES/GLES核心知识_概述与数据结构.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "GLES核心知识_设计思路与线程进程模型",
+                  "path": "绘制渲染/GLES/GLES核心知识_设计思路与线程进程模型.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "RenderNode",
+              "path": "绘制渲染/RenderNode",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "RenderNode核心知识",
+                  "path": "绘制渲染/RenderNode/RenderNode核心知识.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "RenderThread",
+              "path": "绘制渲染/RenderThread",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "RenderThread核心知识",
+                  "path": "绘制渲染/RenderThread/RenderThread核心知识.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "高斯模糊",
+              "path": "绘制渲染/高斯模糊",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "高斯模糊核心知识",
+                  "path": "绘制渲染/高斯模糊/高斯模糊核心知识.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "基础与面试",
+      "path": "基础与面试",
+      "type": "folder",
+      "level": 1,
+      "children": [
+        {
+          "name": "app基础",
+          "path": "app基础",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "App冷启动",
+              "path": "app基础/App冷启动",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "App冷启动厂商技术面试技巧",
+                  "path": "app基础/App冷启动/App冷启动厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "App冷启动核心知识",
+                  "path": "app基础/App冷启动/App冷启动核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "App冷启动项目经验",
+                  "path": "app基础/App冷启动/App冷启动项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "binder",
+              "path": "app基础/binder",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "binder厂商技术面试技巧",
+                  "path": "app基础/binder/binder厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "binder核心知识",
+                  "path": "app基础/binder/binder核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "binder项目经验",
+                  "path": "app基础/binder/binder项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "handler",
+              "path": "app基础/handler",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "handler厂商技术面试技巧",
+                  "path": "app基础/handler/handler厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "handler核心知识",
+                  "path": "app基础/handler/handler核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "handler项目经验",
+                  "path": "app基础/handler/handler项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "bsp基础",
+          "path": "bsp基础",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "ioctl",
+              "path": "bsp基础/ioctl",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "Ioctl厂商技术面试技巧",
+                  "path": "bsp基础/ioctl/Ioctl厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Ioctl核心知识",
+                  "path": "bsp基础/ioctl/Ioctl核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Ioctl项目经验",
+                  "path": "bsp基础/ioctl/Ioctl项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "系统启动流程",
+              "path": "bsp基础/系统启动流程",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "系统启动流程厂商技术面试技巧",
+                  "path": "bsp基础/系统启动流程/系统启动流程厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "系统启动流程核心知识",
+                  "path": "bsp基础/系统启动流程/系统启动流程核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "系统启动流程项目经验",
+                  "path": "bsp基础/系统启动流程/系统启动流程项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "naitve基础",
+          "path": "naitve基础",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "JNI",
+              "path": "naitve基础/JNI",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "JNI厂商技术面试技巧",
+                  "path": "naitve基础/JNI/JNI厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "JNI核心知识",
+                  "path": "naitve基础/JNI/JNI核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "JNI项目经验",
+                  "path": "naitve基础/JNI/JNI项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "aidl_hidl",
+              "path": "naitve基础/aidl_hidl",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "AIDL_HIDL厂商技术面试技巧",
+                  "path": "naitve基础/aidl_hidl/AIDL_HIDL厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AIDL_HIDL核心知识",
+                  "path": "naitve基础/aidl_hidl/AIDL_HIDL核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "AIDL_HIDL项目经验",
+                  "path": "naitve基础/aidl_hidl/AIDL_HIDL项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "poll机制",
+              "path": "naitve基础/poll机制",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "Poll机制厂商技术面试技巧",
+                  "path": "naitve基础/poll机制/Poll机制厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Poll机制核心知识",
+                  "path": "naitve基础/poll机制/Poll机制核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "Poll机制项目经验",
+                  "path": "naitve基础/poll机制/Poll机制项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "基础技术八股文知识体系Skill文档模板",
+          "path": "基础技术八股文知识体系Skill文档模板.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "安全",
+          "path": "安全",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "selinux",
+              "path": "安全/selinux",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "SELinux厂商技术面试技巧",
+                  "path": "安全/selinux/SELinux厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SELinux核心知识",
+                  "path": "安全/selinux/SELinux核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "SELinux项目经验",
+                  "path": "安全/selinux/SELinux项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            },
+            {
+              "name": "trustzone_tui",
+              "path": "安全/trustzone_tui",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "TrustZone_TUI厂商技术面试技巧",
+                  "path": "安全/trustzone_tui/TrustZone_TUI厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "TrustZone_TUI核心知识",
+                  "path": "安全/trustzone_tui/TrustZone_TUI核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "TrustZone_TUI项目经验",
+                  "path": "安全/trustzone_tui/TrustZone_TUI项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "编译",
+          "path": "编译",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "soong&bazel",
+              "path": "编译/soong&bazel",
+              "type": "folder",
+              "level": 2,
+              "children": [
+                {
+                  "name": "soong&bazel厂商技术面试技巧",
+                  "path": "编译/soong&bazel/soong&bazel厂商技术面试技巧.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "soong&bazel核心知识",
+                  "path": "编译/soong&bazel/soong&bazel核心知识.md",
+                  "type": "file",
+                  "level": 3
+                },
+                {
+                  "name": "soong&bazel项目经验",
+                  "path": "编译/soong&bazel/soong&bazel项目经验.md",
+                  "type": "file",
+                  "level": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "面试题库",
+          "path": "面试题库",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Android_BSP开发常见面试题与知识点",
+              "path": "面试题库/Android_BSP开发常见面试题与知识点.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Android_Binder机制常见面试题与知识点",
+              "path": "面试题库/Android_Binder机制常见面试题与知识点.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Android_Framework开发常见面试题与知识点",
+              "path": "面试题库/Android_Framework开发常见面试题与知识点.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Android性能优化常见面试题与知识点",
+              "path": "面试题库/Android性能优化常见面试题与知识点.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Android显示系统常见面试题与知识点",
+              "path": "面试题库/Android显示系统常见面试题与知识点.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "语言技巧知识",
+      "path": "语言技巧知识",
+      "type": "folder",
+      "level": 1,
+      "children": [
+        {
+          "name": "ViberCoding",
+          "path": "ViberCoding",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Android开发MCP工具推荐",
+              "path": "ViberCoding/Android开发MCP工具推荐.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "ViberCoding知识库",
+              "path": "ViberCoding/ViberCoding知识库.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "大语言模型原理深度解析",
+              "path": "ViberCoding/大语言模型原理深度解析.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "模型演进历程-CNN-RNN-Transformer-Diffusion",
+              "path": "ViberCoding/模型演进历程-CNN-RNN-Transformer-Diffusion.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "aarch64",
+          "path": "aarch64",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "README",
+              "path": "aarch64/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "SIMD编程",
+              "path": "aarch64/SIMD编程.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "内存优化",
+              "path": "aarch64/内存优化.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "内存模型",
+              "path": "aarch64/内存模型.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "函数调用约定",
+              "path": "aarch64/函数调用约定.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "加密算法识别",
+              "path": "aarch64/加密算法识别.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "反汇编分析",
+              "path": "aarch64/反汇编分析.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "寄存器系统",
+              "path": "aarch64/寄存器系统.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "异常处理",
+              "path": "aarch64/异常处理.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "循环优化",
+              "path": "aarch64/循环优化.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "性能优化",
+              "path": "aarch64/性能优化.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "指令集基础",
+              "path": "aarch64/指令集基础.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "系统调用分析",
+              "path": "aarch64/系统调用分析.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "cpp",
+          "path": "cpp",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "README",
+              "path": "cpp/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "常见问题",
+              "path": "cpp/常见问题.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "语法基础",
+              "path": "cpp/语法基础.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "java",
+          "path": "java",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "README",
+              "path": "java/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "常见问题",
+              "path": "java/常见问题.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "异常处理",
+              "path": "java/异常处理.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "语法基础",
+              "path": "java/语法基础.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "集合框架",
+              "path": "java/集合框架.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "面向对象",
+              "path": "java/面向对象.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "kotlin",
+          "path": "kotlin",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Android开发",
+              "path": "kotlin/Android开发.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Compose基础",
+              "path": "kotlin/Compose基础.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "README",
+              "path": "kotlin/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "与Java对比",
+              "path": "kotlin/与Java对比.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "主题和动画",
+              "path": "kotlin/主题和动画.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "代码练习",
+              "path": "kotlin/代码练习.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "函数式编程",
+              "path": "kotlin/函数式编程.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "协程编程",
+              "path": "kotlin/协程编程.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "委托属性",
+              "path": "kotlin/委托属性.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "导航和架构",
+              "path": "kotlin/导航和架构.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "常见问题",
+              "path": "kotlin/常见问题.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "性能优化",
+              "path": "kotlin/性能优化.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "扩展函数",
+              "path": "kotlin/扩展函数.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "状态管理",
+              "path": "kotlin/状态管理.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "空安全机制",
+              "path": "kotlin/空安全机制.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "语法基础",
+              "path": "kotlin/语法基础.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "rust",
+          "path": "rust",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Android集成",
+              "path": "rust/Android集成.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "README",
+              "path": "rust/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "与C++对比",
+              "path": "rust/与C++对比.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "代码练习",
+              "path": "rust/代码练习.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "常见问题",
+              "path": "rust/常见问题.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "并发编程",
+              "path": "rust/并发编程.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "性能优化",
+              "path": "rust/性能优化.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "所有权系统",
+              "path": "rust/所有权系统.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "类型系统",
+              "path": "rust/类型系统.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "语法基础",
+              "path": "rust/语法基础.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "项目实战",
+              "path": "rust/项目实战.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "高级特性",
+              "path": "rust/高级特性.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "smali",
+          "path": "smali",
+          "type": "folder",
+          "level": 1,
+          "children": [
+            {
+              "name": "Apktool使用",
+              "path": "smali/Apktool使用.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Frida使用",
+              "path": "smali/Frida使用.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "Jadx使用",
+              "path": "smali/Jadx使用.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "README",
+              "path": "smali/README.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "代码分析",
+              "path": "smali/代码分析.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "反编译原理",
+              "path": "smali/反编译原理.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "反调试技术",
+              "path": "smali/反调试技术.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "日志插桩",
+              "path": "smali/日志插桩.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "权限检查",
+              "path": "smali/权限检查.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "混淆对抗",
+              "path": "smali/混淆对抗.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "签名验证",
+              "path": "smali/签名验证.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "类型系统",
+              "path": "smali/类型系统.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "行为监控",
+              "path": "smali/行为监控.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "语法基础",
+              "path": "smali/语法基础.md",
+              "type": "file",
+              "level": 2
+            },
+            {
+              "name": "资源保护",
+              "path": "smali/资源保护.md",
+              "type": "file",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "name": "语言技巧知识-aarch64",
+          "path": "语言技巧知识-aarch64.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "语言技巧知识-kotlin",
+          "path": "语言技巧知识-kotlin.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "语言技巧知识-rust",
+          "path": "语言技巧知识-rust.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "语言技巧知识-smali",
+          "path": "语言技巧知识-smali.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "语言技巧知识体系Skill文档模板",
+          "path": "语言技巧知识体系Skill文档模板.md",
+          "type": "file",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "name": "项目经验",
+      "path": "项目经验",
+      "type": "folder",
+      "level": 1,
+      "children": [
+        {
+          "name": "OPPO-低延迟显示技术项目",
+          "path": "OPPO-低延迟显示技术项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "小米-DisplayPower模块维护与升级项目",
+          "path": "小米-DisplayPower模块维护与升级项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "小米-WMS模块维护与升级项目",
+          "path": "小米-WMS模块维护与升级项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "抖音-客户端稳定性治理项目",
+          "path": "抖音-客户端稳定性治理项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "追觅-DVSYNC渲染优化项目",
+          "path": "追觅-DVSYNC渲染优化项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "追觅-控件监控工具库建设项目",
+          "path": "追觅-控件监控工具库建设项目.md",
+          "type": "file",
+          "level": 1
+        },
+        {
+          "name": "追觅-系统应用开发项目",
+          "path": "追觅-系统应用开发项目.md",
+          "type": "file",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}
+
 
             // 将知识库结构转换为图形数据
             function convertToGraphData(data, maxLevel = 3) {
@@ -656,104 +2238,6 @@
             
             // 创建场景
             const scene = new BABYLON.Scene(engine);
-            
-            // 物理模拟系统
-            const physicsSystem = {
-                nodes: [],
-                links: [],
-                repulsionForce: 50,    // 斥力强度
-                attractionForce: 0.01,  // 引力强度
-                damping: 0.9,          // 阻尼系数，防止永久振荡
-                minDistance: 5,         // 最小距离，防止斥力过大
-                maxDistance: 100,       // 最大距离，超过此距离不计引力和斥力
-                
-                // 更新节点位置
-                update: function() {
-                    // 计算所有节点受到的力
-                    for (let i = 0; i < this.nodes.length; i++) {
-                        const node = this.nodes[i];
-                        if (!node.mesh || node.level === 0) continue; // 跳过根节点，保持其位置
-                        
-                        let fx = 0, fy = 0, fz = 0;
-                        
-                        // 1. 计算斥力（所有节点之间的斥力）
-                        for (let j = 0; j < this.nodes.length; j++) {
-                            if (i === j) continue;
-                            const other = this.nodes[j];
-                            if (!other.mesh) continue;
-                            
-                            const dx = node.position.x - other.position.x;
-                            const dy = node.position.y - other.position.y;
-                            const dz = node.position.z - other.position.z;
-                            const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
-                            
-                            if (distance < this.maxDistance && distance > this.minDistance) {
-                                // 库仑斥力：F = k * q1 * q2 / r^2
-                                const force = this.repulsionForce / (distance * distance);
-                                fx += (dx / distance) * force;
-                                fy += (dy / distance) * force;
-                                fz += (dz / distance) * force;
-                            }
-                        }
-                        
-                        // 2. 计算引力和拉力（只有连接的节点之间）
-                        for (let j = 0; j < this.links.length; j++) {
-                            const link = this.links[j];
-                            let other = null;
-                            
-                            if (link.source === node.id) {
-                                other = this.nodes.find(n => n.id === link.target);
-                            } else if (link.target === node.id) {
-                                other = this.nodes.find(n => n.id === link.source);
-                            }
-                            
-                            if (!other || !other.mesh) continue;
-                            
-                            const dx = other.position.x - node.position.x;
-                            const dy = other.position.y - node.position.y;
-                            const dz = other.position.z - node.position.z;
-                            const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
-                            
-                            if (distance > this.minDistance) {
-                                // 胡克定律：F = -k * x
-                                const force = this.attractionForce * distance;
-                                fx += dx * force;
-                                fy += dy * force;
-                                fz += dz * force;
-                            }
-                        }
-                        
-                        // 3. 应用力并更新位置
-                        if (node.mesh) {
-                            const vx = (node.velocity.x || 0) * this.damping + fx;
-                            const vy = (node.velocity.y || 0) * this.damping + fy;
-                            const vz = (node.velocity.z || 0) * this.damping + fz;
-                            
-                            node.velocity = {x: vx, y: vy, z: vz};
-                            
-                            node.mesh.position.x += vx;
-                            node.mesh.position.y += vy;
-                            node.mesh.position.z += vz;
-                        }
-                    }
-                },
-                
-                // 添加节点到物理系统
-                addNode: function(node, mesh) {
-                    this.nodes.push({
-                        id: node.id,
-                        level: node.level,
-                        position: {x: mesh.position.x, y: mesh.position.y, z: mesh.position.z},
-                        velocity: {x: 0, y: 0, z: 0},
-                        mesh: mesh
-                    });
-                },
-                
-                // 添加连接到物理系统
-                addLink: function(sourceId, targetId) {
-                    this.links.push({source: sourceId, target: targetId});
-                }
-            };
             scene.clearColor = new BABYLON.Color4(0.95, 0.95, 0.95, 1);
             
             // 创建相机
@@ -950,9 +2434,6 @@
                 // 存储节点数据
                 nodeMesh.metadata = node;
                 
-                // 添加节点到物理系统
-                physicsSystem.addNode(node, nodeMesh);
-                
                 // 创建标签
                 const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
                 labelTexture.hasAlpha = true;
@@ -980,11 +2461,6 @@
                 // 存储引用
                 nodeMeshes.push(nodeMesh);
                 labelMeshes.push(labelPlane);
-            });
-            
-            // 添加连接到物理系统
-            graphData.links.forEach(link => {
-                physicsSystem.addLink(link.source, link.target);
             });
             
             // 创建连线
@@ -1137,10 +2613,6 @@
                 nodeMeshes.length = 0;
                 linkLines.length = 0;
                 labelMeshes.length = 0;
-                
-                // 重置物理系统
-                physicsSystem.nodes = [];
-                physicsSystem.links = [];
                 
                 // 重新创建节点和连线
                 newGraphData.nodes.forEach((node, index) => {
@@ -1312,9 +2784,6 @@
                     // 存储节点数据
                     nodeMesh.metadata = node;
                     
-                    // 添加节点到物理系统
-                    physicsSystem.addNode(node, nodeMesh);
-                    
                     // 创建标签
                     const labelTexture = new BABYLON.DynamicTexture(`label-${node.id}`, {width: 256, height: 64}, scene);
                     labelTexture.hasAlpha = true;
@@ -1345,11 +2814,6 @@
                     // 存储引用
                     nodeMeshes.push(nodeMesh);
                     labelMeshes.push(labelPlane);
-                });
-                
-                // 添加连接到物理系统
-                newGraphData.links.forEach(link => {
-                    physicsSystem.addLink(link.source, link.target);
                 });
                 
                 // 创建连线
@@ -1445,43 +2909,6 @@
             
             // 运行渲染循环
             engine.runRenderLoop(() => {
-                // 更新物理系统
-                physicsSystem.update();
-                
-                // 更新连线位置
-                linkLines.forEach((line, index) => {
-                    const link = graphData.links[index];
-                    if (!link) return;
-                    
-                    const sourceMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.source);
-                    const targetMesh = nodeMeshes.find(m => m.metadata && m.metadata.id === link.target);
-                    
-                    if (sourceMesh && targetMesh) {
-                        const sourcePos = sourceMesh.position;
-                        const targetPos = targetMesh.position;
-                        
-                        // 更新连线位置
-                        const points = [
-                            new BABYLON.Vector3(sourcePos.x, sourcePos.y, sourcePos.z),
-                            new BABYLON.Vector3(targetPos.x, targetPos.y, targetPos.z)
-                        ];
-                        
-                        line.setPoints(points);
-                    }
-                });
-                
-                // 更新标签位置
-                labelMeshes.forEach((label, index) => {
-                    const nodeMesh = nodeMeshes[index];
-                    if (nodeMesh) {
-                        const nodePos = nodeMesh.position;
-                        const nodeSize = nodeMesh.metadata ? 
-                            (nodeMesh.metadata.type === 'file' ? 0.5 : Math.max(0.8, Math.min(2.0, 0.8 + (nodeMesh.metadata.children || 0) * 0.15))) : 1;
-                        
-                        label.position = new BABYLON.Vector3(nodePos.x, nodePos.y + nodeSize + 2, nodePos.z);
-                    }
-                });
-                
                 scene.render();
             });
             
