@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.0.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.1.0</p>
     </div>
     
     <div class="level-indicator">
@@ -590,7 +590,7 @@
             
             // 创建节点和标签
             graphData.nodes.forEach((node, index) => {
-                // 计算节点位置（使用改进的布局算法）
+                // 计算节点位置（使用改进的径向树布局算法）
                 const level = node.level;
                 
                 let x, y, z;
@@ -601,18 +601,44 @@
                     y = 0;
                     z = 0;
                 } else if (level === 1) {
-                    // 二级目录在空间中均匀分布
+                    // 二级目录在空间中均匀分布，两对节点对称排布
                     const level1Nodes = graphData.nodes.filter(n => n.level === 1);
                     const indexInLevel = level1Nodes.findIndex(n => n.id === node.id);
-                    const angleStep = (Math.PI * 2) / level1Nodes.length;
-                    const angle = indexInLevel * angleStep;
-                    const radius = 15;
                     
-                    x = Math.cos(angle) * radius;
-                    z = Math.sin(angle) * radius;
+                    // 根据节点数量决定布局方式
+                    if (level1Nodes.length === 4) {
+                        // 四个节点，两两对称分布
+                        switch(indexInLevel) {
+                            case 0: // 第一个节点
+                                x = -15;
+                                z = -15;
+                                break;
+                            case 1: // 第二个节点，与第一个对称
+                                x = 15;
+                                z = -15;
+                                break;
+                            case 2: // 第三个节点
+                                x = -15;
+                                z = 15;
+                                break;
+                            case 3: // 第四个节点，与第三个对称
+                                x = 15;
+                                z = 15;
+                                break;
+                        }
+                    } else {
+                        // 其他情况，使用圆形分布
+                        const angleStep = (Math.PI * 2) / level1Nodes.length;
+                        const angle = indexInLevel * angleStep;
+                        const radius = 15;
+                        
+                        x = Math.cos(angle) * radius;
+                        z = Math.sin(angle) * radius;
+                    }
+                    
                     y = -8;
                 } else {
-                    // 三级及以下节点向外生长
+                    // 三级及以下节点顺着二级节点方向向外生长
                     const parentNode = graphData.nodes.find(n => n.id === node.parent);
                     const parentPos = parentNode ? getNodePosition(graphData, parentNode.id) : {x: 0, y: -8, z: 0};
                     
@@ -620,9 +646,20 @@
                     const siblings = graphData.nodes.filter(n => n.level === level && n.parent === node.parent);
                     const siblingIndex = siblings.findIndex(n => n.id === node.id);
                     
-                    // 计算子节点围绕父节点分布的角度
-                    const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
-                    const angle = siblingIndex * angleStep;
+                    // 计算从根节点到父节点的方向向量
+                    const rootToParent = {
+                        x: parentPos.x,
+                        z: parentPos.z
+                    };
+                    
+                    // 计算父节点相对于根节点的角度
+                    const parentAngle = Math.atan2(rootToParent.z, rootToParent.x);
+                    
+                    // 计算子节点分布的角度范围（在父节点方向上扩展）
+                    const angleRange = Math.PI / 3; // 60度范围
+                    const startAngle = parentAngle - angleRange / 2;
+                    const angleStep = angleRange / Math.max(siblings.length - 1, 1);
+                    const angle = startAngle + siblingIndex * angleStep;
                     
                     // 根据层级调整半径
                     const radius = 8 + level * 2;
@@ -887,7 +924,7 @@
                 
                 // 重新创建节点和连线
                 newGraphData.nodes.forEach((node, index) => {
-                    // 计算节点位置（使用改进的布局算法）
+                    // 计算节点位置（使用改进的径向树布局算法）
                     const level = node.level;
                     
                     let x, y, z;
@@ -898,18 +935,44 @@
                         y = 0;
                         z = 0;
                     } else if (level === 1) {
-                        // 二级目录在空间中均匀分布
+                        // 二级目录在空间中均匀分布，两对节点对称排布
                         const level1Nodes = newGraphData.nodes.filter(n => n.level === 1);
                         const indexInLevel = level1Nodes.findIndex(n => n.id === node.id);
-                        const angleStep = (Math.PI * 2) / level1Nodes.length;
-                        const angle = indexInLevel * angleStep;
-                        const radius = 15;
                         
-                        x = Math.cos(angle) * radius;
-                        z = Math.sin(angle) * radius;
+                        // 根据节点数量决定布局方式
+                        if (level1Nodes.length === 4) {
+                            // 四个节点，两两对称分布
+                            switch(indexInLevel) {
+                                case 0: // 第一个节点
+                                    x = -15;
+                                    z = -15;
+                                    break;
+                                case 1: // 第二个节点，与第一个对称
+                                    x = 15;
+                                    z = -15;
+                                    break;
+                                case 2: // 第三个节点
+                                    x = -15;
+                                    z = 15;
+                                    break;
+                                case 3: // 第四个节点，与第三个对称
+                                    x = 15;
+                                    z = 15;
+                                    break;
+                            }
+                        } else {
+                            // 其他情况，使用圆形分布
+                            const angleStep = (Math.PI * 2) / level1Nodes.length;
+                            const angle = indexInLevel * angleStep;
+                            const radius = 15;
+                            
+                            x = Math.cos(angle) * radius;
+                            z = Math.sin(angle) * radius;
+                        }
+                        
                         y = -8;
                     } else {
-                        // 三级及以下节点向外生长
+                        // 三级及以下节点顺着二级节点方向向外生长
                         const parentNode = newGraphData.nodes.find(n => n.id === node.parent);
                         const parentPos = parentNode ? getUpdatedNodePosition(newGraphData, parentNode.id, currentPositions) : {x: 0, y: -8, z: 0};
                         
@@ -917,9 +980,20 @@
                         const siblings = newGraphData.nodes.filter(n => n.level === level && n.parent === node.parent);
                         const siblingIndex = siblings.findIndex(n => n.id === node.id);
                         
-                        // 计算子节点围绕父节点分布的角度
-                        const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
-                        const angle = siblingIndex * angleStep;
+                        // 计算从根节点到父节点的方向向量
+                        const rootToParent = {
+                            x: parentPos.x,
+                            z: parentPos.z
+                        };
+                        
+                        // 计算父节点相对于根节点的角度
+                        const parentAngle = Math.atan2(rootToParent.z, rootToParent.x);
+                        
+                        // 计算子节点分布的角度范围（在父节点方向上扩展）
+                        const angleRange = Math.PI / 3; // 60度范围
+                        const startAngle = parentAngle - angleRange / 2;
+                        const angleStep = angleRange / Math.max(siblings.length - 1, 1);
+                        const angle = startAngle + siblingIndex * angleStep;
                         
                         // 根据层级调整半径
                         const radius = 8 + level * 2;
