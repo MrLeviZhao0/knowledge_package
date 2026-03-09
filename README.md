@@ -109,7 +109,16 @@ Android知识库
 - **项目经验**：[PKMS项目经验](业务模块知识/Framework/PKMS/PKMS项目经验.md)
 - **面试技巧**：[PKMS厂商技术面试技巧](业务模块知识/Framework/PKMS/PKMS厂商技术面试技巧.md)
 
-#### 1.1.5 亮灭屏模块
+#### 1.1.5 Choreographer (时序协调器)
+**核心职责**：UI时序协调、VSync信号处理、回调调度
+- **核心知识**：[Choreographer核心知识_概述与数据结构](业务模块知识/Framework/Choreographer/Choreographer核心知识_概述与数据结构.md)
+- **设计思路**：[Choreographer核心知识_设计思路与线程进程模型](业务模块知识/Framework/Choreographer/Choreographer核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[Choreographer核心知识_接口与运转流程](业务模块知识/Framework/Choreographer/Choreographer核心知识_接口与运转流程.md)
+- **主要功能**：[Choreographer核心知识_主要功能与优化](业务模块知识/Framework/Choreographer/Choreographer核心知识_主要功能与优化.md)
+- **项目经验**：[Choreographer项目经验](业务模块知识/Framework/Choreographer/Choreographer项目经验.md)
+- **面试技巧**：[Choreographer厂商技术面试技巧](业务模块知识/Framework/Choreographer/Choreographer厂商技术面试技巧.md)
+
+#### 1.1.6 亮灭屏模块
 **核心职责**：电源管理、显示控制、温度监控、息屏显示
 
 **PMS (Power Manager Service)**

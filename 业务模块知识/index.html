@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisplayFeature 知识库 3D 可视化</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .info-panel h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .info-panel p {
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .node-info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            display: none;
+        }
+        
+        .node-info h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .node-info p {
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="graph-container"></div>
+    
+    <div class="info-panel">
+        <h2>DisplayFeature 知识库</h2>
+        <p>这是一个3D可视化展示，用于直观展示DisplayFeature知识库的结构和内容。</p>
+        <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
+        <p>节点大小表示内容重要性，连线表示内容关联性。</p>
+    </div>
+    
+    <div class="node-info" id="node-info">
+        <h3 id="node-title">节点信息</h3>
+        <p id="node-desc">点击节点查看详细信息</p>
+    </div>
+    
+    <div class="controls">
+        <button id="reset-view">重置视角</button>
+        <button id="toggle-links">切换连线</button>
+        <button id="toggle-labels">切换标签</button>
+    </div>
+
+    <!-- 3D Force Graph CDN -->
+    <script src="https://unpkg.com/3d-force-graph"></script>
+    <!-- d3.js for data processing -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    
+    <script>
+        // DisplayFeature知识库数据结构
+        const graphData = {
+            nodes: [
+                // 核心节点
+                { id: "displayfeature", name: "DisplayFeature", group: "core", level: 0, desc: "DisplayFeature核心知识模块" },
+                
+                // 设计思路
+                { id: "design", name: "设计思路", group: "category", level: 1, desc: "DisplayFeature设计思路与架构" },
+                { id: "layered-design", name: "分层设计", group: "concept", level: 2, desc: "系统分层架构设计" },
+                { id: "comm-mechanism", name: "通信机制", group: "concept", level: 2, desc: "Binder跨进程通信机制" },
+                { id: "core-mechanism", name: "核心机制", group: "concept", level: 2, desc: "特性状态管理机制" },
+                
+                // 实现技术
+                { id: "implementation", name: "实现技术", group: "category", level: 1, desc: "DisplayFeature实现技术详解" },
+                { id: "dc-dimming", name: "DC调光", group: "tech", level: 2, desc: "DC调光实现技术" },
+                { id: "reading-mode", name: "阅读模式", group: "tech", level: 2, desc: "阅读模式实现技术" },
+                { id: "video-enhance", name: "视频增强", group: "tech", level: 2, desc: "视频增强实现技术" },
+                
+                // 厂商技术
+                { id: "vendor-tech", name: "厂商技术", group: "category", level: 1, desc: "各大厂商DisplayFeature技术" },
+                { id: "xiaomi", name: "小米技术", group: "vendor", level: 2, desc: "小米DisplayFeature技术特点" },
+                { id: "huawei", name: "华为技术", group: "vendor", level: 2, desc: "华为DisplayFeature技术特点" },
+                { id: "oppo", name: "OPPO技术", group: "vendor", level: 2, desc: "OPPO DisplayFeature技术特点" },
+                { id: "vivo", name: "vivo技术", group: "vendor", level: 2, desc: "vivo DisplayFeature技术特点" },
+                { id: "samsung", name: "三星技术", group: "vendor", level: 2, desc: "三星DisplayFeature技术特点" },
+                
+                // 技术对比
+                { id: "comparison", name: "技术对比", group: "category", level: 1, desc: "各厂商技术对比分析" },
+                { id: "eye-protection", name: "护眼模式对比", group: "compare", level: 2, desc: "各厂商护眼模式技术对比" },
+                { id: "refresh-rate", name: "刷新率对比", group: "compare", level: 2, desc: "各厂商动态刷新率技术对比" },
+                { id: "video-enhance-compare", name: "视频增强对比", group: "compare", level: 2, desc: "各厂商视频增强技术对比" },
+                
+                // 实现要点
+                { id: "implementation-key", name: "实现要点", group: "category", level: 1, desc: "技术实现要点总结" },
+                { id: "algorithm", name: "核心算法", group: "key", level: 2, desc: "核心算法实现要点" },
+                { id: "hardware", name: "硬件要求", group: "key", level: 2, desc: "硬件平台要求" },
+                { id: "software-arch", name: "软件架构", group: "key", level: 2, desc: "软件架构设计" },
+                
+                // 补充概述
+                { id: "summary", name: "补充概述", group: "category", level: 1, desc: "补充内容概述" },
+                { id: "tech-trends", name: "技术趋势", group: "summary", level: 2, desc: "技术发展趋势" },
+                { id: "dev-advice", name: "开发建议", group: "summary", level: 2, desc: "开发实践建议" }
+            ],
+            links: [
+                // 核心连接
+                { source: "displayfeature", target: "design", value: 10 },
+                { source: "displayfeature", target: "implementation", value: 10 },
+                { source: "displayfeature", target: "vendor-tech", value: 10 },
+                { source: "displayfeature", target: "comparison", value: 10 },
+                { source: "displayfeature", target: "implementation-key", value: 10 },
+                { source: "displayfeature", target: "summary", value: 10 },
+                
+                // 设计思路连接
+                { source: "design", target: "layered-design", value: 5 },
+                { source: "design", target: "comm-mechanism", value: 5 },
+                { source: "design", target: "core-mechanism", value: 5 },
+                
+                // 实现技术连接
+                { source: "implementation", target: "dc-dimming", value: 5 },
+                { source: "implementation", target: "reading-mode", value: 5 },
+                { source: "implementation", target: "video-enhance", value: 5 },
+                
+                // 厂商技术连接
+                { source: "vendor-tech", target: "xiaomi", value: 5 },
+                { source: "vendor-tech", target: "huawei", value: 5 },
+                { source: "vendor-tech", target: "oppo", value: 5 },
+                { source: "vendor-tech", target: "vivo", value: 5 },
+                { source: "vendor-tech", target: "samsung", value: 5 },
+                
+                // 技术对比连接
+                { source: "comparison", target: "eye-protection", value: 5 },
+                { source: "comparison", target: "refresh-rate", value: 5 },
+                { source: "comparison", target: "video-enhance-compare", value: 5 },
+                
+                // 实现要点连接
+                { source: "implementation-key", target: "algorithm", value: 5 },
+                { source: "implementation-key", target: "hardware", value: 5 },
+                { source: "implementation-key", target: "software-arch", value: 5 },
+                
+                // 补充概述连接
+                { source: "summary", target: "tech-trends", value: 5 },
+                { source: "summary", target: "dev-advice", value: 5 },
+                
+                // 跨类别连接
+                { source: "dc-dimming", target: "eye-protection", value: 3 },
+                { source: "reading-mode", target: "eye-protection", value: 3 },
+                { source: "video-enhance", target: "video-enhance-compare", value: 3 },
+                { source: "xiaomi", target: "eye-protection", value: 3 },
+                { source: "huawei", target: "refresh-rate", value: 3 },
+                { source: "oppo", target: "video-enhance-compare", value: 3 },
+                { source: "vivo", target: "refresh-rate", value: 3 },
+                { source: "samsung", target: "eye-protection", value: 3 },
+                { source: "algorithm", target: "tech-trends", value: 3 },
+                { source: "hardware", target: "dev-advice", value: 3 }
+            ]
+        };
+
+        // 颜色映射
+        const colorMap = {
+            core: '#ff7f0e',      // 橙色 - 核心
+            category: '#2ca02c',   // 绿色 - 类别
+            concept: '#1f77b4',    // 蓝色 - 概念
+            tech: '#9467bd',      // 紫色 - 技术
+            vendor: '#d62728',     // 红色 - 厂商
+            compare: '#ff9800',    // 橙红色 - 对比
+            key: '#7f7f7f',       // 灰色 - 要点
+            summary: '#8c564b'     // 棕色 - 总结
+        };
+
+        // 初始化3D Force Graph
+        const Graph = ForceGraph3D()
+            (document.getElementById('graph-container'))
+            .graphData(graphData)
+            .nodeLabel('name')
+            .nodeAutoColorBy('group')
+            .nodeColor(node => colorMap[node.group] || '#cccccc')
+            .nodeVal(node => {
+                // 根据层级设置节点大小
+                const sizeMap = { 0: 12, 1: 8, 2: 5 };
+                return sizeMap[node.level] || 5;
+            })
+            .linkColor(() => 'rgba(255,255,255,0.6)')
+            .linkWidth(link => Math.sqrt(link.value))
+            .linkDirectionalParticles(2)
+            .linkDirectionalParticleSpeed(0.005)
+            .onNodeClick(node => {
+                // 显示节点信息
+                const nodeInfo = document.getElementById('node-info');
+                document.getElementById('node-title').textContent = node.name;
+                document.getElementById('node-desc').textContent = node.desc;
+                nodeInfo.style.display = 'block';
+            })
+            .onBackgroundClick(() => {
+                // 隐藏节点信息
+                document.getElementById('node-info').style.display = 'none';
+            });
+
+        // 控制按钮功能
+        document.getElementById('reset-view').addEventListener('click', () => {
+            Graph.cameraPosition({ x: 0, y: 0, z: 500 }); // 重置视角
+        });
+
+        let linksVisible = true;
+        document.getElementById('toggle-links').addEventListener('click', () => {
+            linksVisible = !linksVisible;
+            Graph.linkOpacity(linksVisible ? 1 : 0);
+        });
+
+        let labelsVisible = true;
+        document.getElementById('toggle-labels').addEventListener('click', () => {
+            labelsVisible = !labelsVisible;
+            Graph.nodeLabel(labelsVisible ? 'name' : '');
+        });
+    </script>
+</body>
+</html>
