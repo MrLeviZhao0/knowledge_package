@@ -118,7 +118,29 @@ Android知识库
 - **项目经验**：[Choreographer项目经验](业务模块知识/Framework/Choreographer/Choreographer项目经验.md)
 - **面试技巧**：[Choreographer厂商技术面试技巧](业务模块知识/Framework/Choreographer/Choreographer厂商技术面试技巧.md)
 
-#### 1.1.6 亮灭屏模块
+#### 1.1.6 SystemProperty (系统属性)
+**核心职责**：系统配置管理、运行时状态跟踪、跨进程通信
+- **核心知识**：[SystemProperty核心知识_概述与数据结构](业务模块知识/Framework/SystemProperty/SystemProperty核心知识_概述与数据结构.md)
+- **设计思路**：[SystemProperty核心知识_设计思路与线程进程模型](业务模块知识/Framework/SystemProperty/SystemProperty核心知识_设计思路与线程进程模型.md)
+- **接口流程**：[SystemProperty核心知识_接口与运转流程](业务模块知识/Framework/SystemProperty/SystemProperty核心知识_接口与运转流程.md)
+- **主要功能**：[SystemProperty核心知识_主要功能与优化](业务模块知识/Framework/SystemProperty/SystemProperty核心知识_主要功能与优化.md)
+- **项目经验**：[SystemProperty项目经验](业务模块知识/Framework/SystemProperty/SystemProperty项目经验.md)
+- **面试技巧**：[SystemProperty厂商技术面试技巧](业务模块知识/Framework/SystemProperty/SystemProperty厂商技术面试技巧.md)
+
+#### 1.1.7 GLES (OpenGL ES)
+**核心职责**：图形渲染、GPU加速、UI绘制基础
+- **核心知识**：[GLES核心知识_概述与数据结构](业务模块知识/Framework/GLES/GLES核心知识_概述与数据结构.md)
+- **设计思路**：[GLES核心知识_设计思路与线程进程模型](业务模块知识/Framework/GLES/GLES核心知识_设计思路与线程进程模型.md)
+
+#### 1.1.8 KeyGuard (系统锁屏)
+**核心职责**：设备安全、解锁管理、隐私保护
+- **核心知识**：[KeyGuard核心知识_概述与数据结构](业务模块知识/Framework/KeyGuard/KeyGuard核心知识_概述与数据结构.md)
+
+#### 1.1.9 左右手模式
+**核心职责**：单手操作优化、窗口缩放、布局调整
+- **核心知识**：[左右手模式核心知识_概述与数据结构](业务模块知识/Framework/左右手模式/左右手模式核心知识_概述与数据结构.md)
+
+#### 1.1.10 亮灭屏模块
 **核心职责**：电源管理、显示控制、温度监控、息屏显示
 
 **PMS (Power Manager Service)**
