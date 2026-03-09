@@ -462,6 +462,7 @@
                 1: '#ff7f0e',      // 橙色 - 一级目录
                 2: '#2ca02c',      // 绿色 - 二级目录
                 3: '#1f77b4',      // 蓝色 - 三级目录
+                4: '#d62728',      // 深绿色 - 四级目录(文件)
                 file: '#9467bd'     // 紫色 - 文件节点
             };
 
@@ -499,14 +500,16 @@
                 const levelNodes = graphData.nodes.filter(n => n.level === level);
                 const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
                 const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
-                const radius = 30 + level * 20;
+                // 减小半径，使节点间距离更近
+                const radius = 20 + level * 12;
                 
                 const x = Math.cos(angle) * radius;
                 const z = Math.sin(angle) * radius;
-                const y = -level * 15;
+                const y = -level * 10; // 减小层级间距
                 
-                // 创建节点
-                const size = node.type === 'file' ? 0.5 : 1.0 - level * 0.1;
+                // 根据子节点数量调整节点大小
+                const childCount = node.children || 0;
+                const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
                 const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
                 
                 let nodeMesh;
@@ -601,13 +604,13 @@
                     
                     if (pickedMesh && pickedMesh.metadata) {
                         const node = pickedMesh.metadata;
-                        console.log('点击节点:', node.name, node.type);
+                        console.log('点击节点:', node.name, node.type, 'level:', node.level);
                         
                         if (node.type === 'file') {
                             // 文件节点，跳转到对应文档
                             window.open(node.path, '_blank');
-                        } else if (node.children > 0) {
-                            // 目录节点，展开/折叠子节点
+                        } else if (node.children > 0 && node.level >= 3) {
+                            // 只有三级及以上目录节点才能展开/折叠子节点
                             toggleNodeExpansion(node);
                         }
                         
@@ -663,6 +666,14 @@
             
             // 更新图形
             function updateGraph(newGraphData) {
+                // 保存当前节点的位置
+                const currentPositions = new Map();
+                nodeMeshes.forEach(mesh => {
+                    if (mesh.metadata) {
+                        currentPositions.set(mesh.metadata.id, mesh.position.clone());
+                    }
+                });
+                
                 // 清除现有的节点和连线
                 nodeMeshes.forEach(mesh => mesh.dispose());
                 linkLines.forEach(line => line.dispose());
@@ -679,14 +690,17 @@
                     const levelNodes = newGraphData.nodes.filter(n => n.level === level);
                     const indexInLevel = levelNodes.findIndex(n => n.id === node.id);
                     const angle = (indexInLevel / levelNodes.length) * Math.PI * 2;
-                    const radius = 30 + level * 20;
+                    // 使用与初始创建相同的半径和间距
+                    const radius = 20 + level * 12;
                     
                     const x = Math.cos(angle) * radius;
                     const z = Math.sin(angle) * radius;
-                    const y = -level * 15;
+                    const y = -level * 10;
                     
                     // 创建节点
-                    const size = node.type === 'file' ? 0.5 : 1.0 - level * 0.1;
+                    // 根据子节点数量调整节点大小
+                    const childCount = node.children || 0;
+                    const size = node.type === 'file' ? 0.5 : Math.max(0.8, Math.min(1.5, 0.8 + childCount * 0.1));
                     const nodeColor = node.type === 'file' ? colorMap.file : colorMap[level] || '#cccccc';
                     
                     let nodeMesh;
@@ -706,7 +720,17 @@
                         }, scene);
                     }
                     
-                    nodeMesh.position = new BABYLON.Vector3(x, y, z);
+                    // 使用保存的位置或计算新位置
+                    let position;
+                    if (currentPositions.has(node.id)) {
+                        // 使用保存的位置，确保节点不移动
+                        position = currentPositions.get(node.id);
+                    } else {
+                        // 新节点，计算位置
+                        position = new BABYLON.Vector3(x, y, z);
+                    }
+                    
+                    nodeMesh.position = position;
                     
                     // 创建材质
                     const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
@@ -738,7 +762,10 @@
                     labelMaterial.backFaceCulling = false;
                     
                     const labelPlane = BABYLON.MeshBuilder.CreatePlane(`label-${node.id}`, {width: 10, height: 2.5}, scene);
-                    labelPlane.position = new BABYLON.Vector3(x, y + size + 2, z);
+                    // 使用与节点相同的位置逻辑，确保标签跟随节点
+                    const labelPosition = position.clone();
+                    labelPosition.y += size + 2;
+                    labelPlane.position = labelPosition;
                     labelPlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
                     labelPlane.material = labelMaterial;
                     
