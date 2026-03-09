@@ -182,7 +182,7 @@
         <p>使用鼠标拖拽旋转视角，滚轮缩放，点击节点查看详细信息。</p>
         <p>圆形节点表示目录，三角形节点表示文档。</p>
         <p>点击目录节点可展开/折叠子节点，点击文档节点可跳转到对应内容。</p>
-        <p>节点标签始终可见，无需鼠标悬停。版本号: v1.2.0</p>
+        <p>节点标签始终可见，无需鼠标悬停。版本号: v2.0.0</p>
     </div>
     
     <div class="level-indicator">
@@ -243,7 +243,7 @@
         function initGraph() {
             // 知识库数据结构
             const knowledgeBase = {
-                name: "Android知识库",
+                name: "知识库",
                 path: "",
                 type: "folder",
                 level: 0,
@@ -255,7 +255,7 @@
                         level: 1,
                         children: [
                             {
-                                name: "Framework核心服务",
+                                name: "Framework",
                                 path: "业务模块知识/Framework",
                                 type: "folder",
                                 level: 2,
@@ -301,39 +301,70 @@
                                             { name: "AMS项目经验", path: "业务模块知识/Framework/AMS/AMS项目经验.md", type: "file", level: 4 },
                                             { name: "AMS厂商技术面试技巧", path: "业务模块知识/Framework/AMS/AMS厂商技术面试技巧.md", type: "file", level: 4 }
                                         ]
+                                    },
+                                    {
+                                        name: "Display",
+                                        path: "业务模块知识/Display",
+                                        type: "folder",
+                                        level: 3,
+                                        children: [
+                                            {
+                                                name: "合成",
+                                                path: "业务模块知识/Display/合成",
+                                                type: "folder",
+                                                level: 4,
+                                                children: [
+                                                    { name: "SurfaceFlinger核心知识_概述与数据结构", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md", type: "file", level: 5 },
+                                                    { name: "SurfaceFlinger核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md", type: "file", level: 5 },
+                                                    { name: "SurfaceFlinger核心知识_接口与运转流程", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md", type: "file", level: 5 },
+                                                    { name: "SurfaceFlinger核心知识_主要功能与优化", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md", type: "file", level: 5 },
+                                                    { name: "SurfaceFlinger项目经验", path: "业务模块知识/Display/合成/SurfaceFlinger项目经验.md", type: "file", level: 5 },
+                                                    { name: "SurfaceFlinger厂商技术面试技巧", path: "业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md", type: "file", level: 5 }
+                                                ]
+                                            },
+                                            {
+                                                name: "DRM",
+                                                path: "业务模块知识/Display/DRM",
+                                                type: "folder",
+                                                level: 4,
+                                                children: [
+                                                    { name: "DRM_KMS核心知识_概述与数据结构", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_概述与数据结构.md", type: "file", level: 5 },
+                                                    { name: "DRM_KMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_设计思路与线程进程模型.md", type: "file", level: 5 },
+                                                    { name: "DRM_KMS核心知识_接口与运转流程", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_接口与运转流程.md", type: "file", level: 5 },
+                                                    { name: "DRM_KMS核心知识_主要功能与优化", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_主要功能与优化.md", type: "file", level: 5 }
+                                                ]
+                                            }
+                                        ]
                                     }
                                 ]
                             },
                             {
-                                name: "Display",
-                                path: "业务模块知识/Display",
+                                name: "APM开发",
+                                path: "业务模块知识/APM开发",
                                 type: "folder",
                                 level: 2,
                                 children: [
                                     {
-                                        name: "合成",
-                                        path: "业务模块知识/Display/合成",
+                                        name: "Hook技术",
+                                        path: "业务模块知识/APM开发/Hook技术",
                                         type: "folder",
                                         level: 3,
                                         children: [
-                                            { name: "SurfaceFlinger核心知识_概述与数据结构", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_概述与数据结构.md", type: "file", level: 4 },
-                                            { name: "SurfaceFlinger核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_设计思路与线程进程模型.md", type: "file", level: 4 },
-                                            { name: "SurfaceFlinger核心知识_接口与运转流程", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_接口与运转流程.md", type: "file", level: 4 },
-                                            { name: "SurfaceFlinger核心知识_主要功能与优化", path: "业务模块知识/Display/合成/SurfaceFlinger核心知识_主要功能与优化.md", type: "file", level: 4 },
-                                            { name: "SurfaceFlinger项目经验", path: "业务模块知识/Display/合成/SurfaceFlinger项目经验.md", type: "file", level: 4 },
-                                            { name: "SurfaceFlinger厂商技术面试技巧", path: "业务模块知识/Display/合成/SurfaceFlinger厂商技术面试技巧.md", type: "file", level: 4 }
+                                            { name: "ELF文件格式详解", path: "业务模块知识/APM开发/Hook技术/ELF文件格式详解.md", type: "file", level: 4 },
+                                            { name: "Hook技术核心原理", path: "业务模块知识/APM开发/Hook技术/Hook技术核心原理.md", type: "file", level: 4 },
+                                            { name: "Java-Hook技术详解", path: "业务模块知识/APM开发/Hook技术/Java-Hook技术详解.md", type: "file", level: 4 },
+                                            { name: "Native-Hook技术详解", path: "业务模块知识/APM开发/Hook技术/Native-Hook技术详解.md", type: "file", level: 4 },
+                                            { name: "流行Hook框架详解", path: "业务模块知识/APM开发/Hook技术/流行Hook框架详解.md", type: "file", level: 4 }
                                         ]
                                     },
                                     {
-                                        name: "DRM/KMS",
-                                        path: "业务模块知识/Display/DRM",
+                                        name: "兜底回滚",
+                                        path: "业务模块知识/APM开发/兜底回滚",
                                         type: "folder",
                                         level: 3,
                                         children: [
-                                            { name: "DRM_KMS核心知识_概述与数据结构", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_概述与数据结构.md", type: "file", level: 4 },
-                                            { name: "DRM_KMS核心知识_设计思路与线程进程模型", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_设计思路与线程进程模型.md", type: "file", level: 4 },
-                                            { name: "DRM_KMS核心知识_接口与运转流程", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_接口与运转流程.md", type: "file", level: 4 },
-                                            { name: "DRM_KMS核心知识_主要功能与优化", path: "业务模块知识/Display/DRM/DRM_KMS核心知识_主要功能与优化.md", type: "file", level: 4 }
+                                            { name: "回滚策略实现", path: "业务模块知识/APM开发/兜底回滚/回滚策略实现.md", type: "file", level: 4 },
+                                            { name: "客户端兜底策略", path: "业务模块知识/APM开发/兜底回滚/客户端兜底策略.md", type: "file", level: 4 }
                                         ]
                                     }
                                 ]
@@ -341,19 +372,19 @@
                         ]
                     },
                     {
-                        name: "基础技术八股文知识",
+                        name: "基础与面试",
                         path: "基础与面试",
                         type: "folder",
                         level: 1,
                         children: [
                             {
-                                name: "App基础",
+                                name: "app基础",
                                 path: "基础与面试/app基础",
                                 type: "folder",
                                 level: 2,
                                 children: [
                                     {
-                                        name: "Binder机制",
+                                        name: "binder",
                                         path: "基础与面试/app基础/binder",
                                         type: "folder",
                                         level: 3,
@@ -364,7 +395,7 @@
                                         ]
                                     },
                                     {
-                                        name: "Handler机制",
+                                        name: "handler",
                                         path: "基础与面试/app基础/handler",
                                         type: "folder",
                                         level: 3,
@@ -374,6 +405,55 @@
                                             { name: "handler厂商技术面试技巧", path: "基础与面试/app基础/handler/handler厂商技术面试技巧.md", type: "file", level: 4 }
                                         ]
                                     }
+                                ]
+                            },
+                            {
+                                name: "bsp基础",
+                                path: "基础与面试/bsp基础",
+                                type: "folder",
+                                level: 2,
+                                children: [
+                                    {
+                                        name: "ioctl",
+                                        path: "基础与面试/bsp基础/ioctl",
+                                        type: "folder",
+                                        level: 3,
+                                        children: [
+                                            { name: "Ioctl核心知识", path: "基础与面试/bsp基础/ioctl/Ioctl核心知识.md", type: "file", level: 4 },
+                                            { name: "Ioctl项目经验", path: "基础与面试/bsp基础/ioctl/Ioctl项目经验.md", type: "file", level: 4 },
+                                            { name: "Ioctl厂商技术面试技巧", path: "基础与面试/bsp基础/ioctl/Ioctl厂商技术面试技巧.md", type: "file", level: 4 }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: "项目经验",
+                        path: "项目经验",
+                        type: "folder",
+                        level: 1,
+                        children: [
+                            {
+                                name: "WMS项目经验",
+                                path: "项目经验/WMS项目经验",
+                                type: "folder",
+                                level: 2,
+                                children: [
+                                    { name: "WMS项目经验案例1", path: "项目经验/WMS项目经验/WMS项目经验案例1.md", type: "file", level: 3 },
+                                    { name: "WMS项目经验案例2", path: "项目经验/WMS项目经验/WMS项目经验案例2.md", type: "file", level: 3 },
+                                    { name: "WMS项目经验案例3", path: "项目经验/WMS项目经验/WMS项目经验案例3.md", type: "file", level: 3 }
+                                ]
+                            },
+                            {
+                                name: "Display项目经验",
+                                path: "项目经验/Display项目经验",
+                                type: "folder",
+                                level: 2,
+                                children: [
+                                    { name: "Display项目经验案例1", path: "项目经验/Display项目经验/Display项目经验案例1.md", type: "file", level: 3 },
+                                    { name: "Display项目经验案例2", path: "项目经验/Display项目经验/Display项目经验案例2.md", type: "file", level: 3 },
+                                    { name: "Display项目经验案例3", path: "项目经验/Display项目经验/Display项目经验案例3.md", type: "file", level: 3 }
                                 ]
                             }
                         ]
@@ -409,7 +489,8 @@
                 // 递归处理节点
                 function processNode(node, parentId = null, visible = true) {
                     const currentNodeId = `${nodeId++}`;
-                    const isVisible = visible && node.level <= maxLevel;
+                    // 默认只显示到三级节点，且不显示文件
+                    const isVisible = visible && node.level <= maxLevel && (node.type === 'folder' || node.level <= 2);
                     
                     // 只添加可见节点
                     if (isVisible) {
@@ -519,10 +600,21 @@
                     x = 0;
                     y = 0;
                     z = 0;
+                } else if (level === 1) {
+                    // 二级目录在空间中均匀分布
+                    const level1Nodes = graphData.nodes.filter(n => n.level === 1);
+                    const indexInLevel = level1Nodes.findIndex(n => n.id === node.id);
+                    const angleStep = (Math.PI * 2) / level1Nodes.length;
+                    const angle = indexInLevel * angleStep;
+                    const radius = 15;
+                    
+                    x = Math.cos(angle) * radius;
+                    z = Math.sin(angle) * radius;
+                    y = -8;
                 } else {
-                    // 找到父节点
+                    // 三级及以下节点向外生长
                     const parentNode = graphData.nodes.find(n => n.id === node.parent);
-                    const parentPos = parentNode ? getNodePosition(graphData, parentNode.id) : {x: 0, y: -10 * (level-1), z: 0};
+                    const parentPos = parentNode ? getNodePosition(graphData, parentNode.id) : {x: 0, y: -8, z: 0};
                     
                     // 获取同级节点
                     const siblings = graphData.nodes.filter(n => n.level === level && n.parent === node.parent);
@@ -532,13 +624,13 @@
                     const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
                     const angle = siblingIndex * angleStep;
                     
-                    // 根据层级调整半径，使节点更紧凑
-                    const radius = 8 + level * 3;
+                    // 根据层级调整半径
+                    const radius = 8 + level * 2;
                     
                     // 计算位置
                     x = parentPos.x + Math.cos(angle) * radius;
                     z = parentPos.z + Math.sin(angle) * radius;
-                    y = -level * 6; // 减小层级间距
+                    y = -level * 5;
                 }
                 
                 // 根据子节点数量调整节点大小
@@ -566,6 +658,9 @@
                 
                 // 创建材质
                 const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
+                
+                // 判断节点是否可点击
+                const isClickable = node.children > 0 && (node.level >= 2 || (node.level === 1 && hasDirectFilesInKnowledgeBase(node)));
                 
                 // 使用RGB值直接创建颜色，而不是FromHexString
                 let babylonColor;
@@ -596,7 +691,15 @@
                 
                 material.diffuseColor = babylonColor;
                 material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-                material.emissiveColor = babylonColor.scale(0.2);
+                
+                // 可点击节点有更高的自发光，使其更明显
+                if (isClickable) {
+                    material.emissiveColor = babylonColor.scale(0.4);
+                    material.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+                } else {
+                    material.emissiveColor = babylonColor.scale(0.2);
+                }
+                
                 nodeMesh.material = material;
                 
                 // 存储节点数据
@@ -669,8 +772,8 @@
                         if (node.type === 'file') {
                             // 文件节点，跳转到对应文档
                             window.open(node.path, '_blank');
-                        } else if (node.children > 0 && node.level >= 3) {
-                            // 只有三级及以上目录节点才能展开/折叠子节点
+                        } else if (node.children > 0 && (node.level >= 2 || (node.level === 1 && hasDirectFiles(node)))) {
+                            // 三级及以上目录节点可以点击，或者一级目录下有直接文件时也可以点击
                             toggleNodeExpansion(node);
                         }
                         
@@ -685,6 +788,33 @@
                     }
                 }
             });
+            
+            // 检查目录下是否有直接文件
+            function hasDirectFiles(node) {
+                if (!node.children) return false;
+                return node.children.some(child => child.type === 'file');
+            }
+            
+            // 在知识库中检查目录下是否有直接文件
+            function hasDirectFilesInKnowledgeBase(node) {
+                function findNode(nodeData, path) {
+                    if (nodeData.path === path) {
+                        return nodeData;
+                    }
+                    
+                    if (nodeData.children) {
+                        for (const child of nodeData.children) {
+                            const result = findNode(child, path);
+                            if (result) return result;
+                        }
+                    }
+                    
+                    return null;
+                }
+                
+                const nodeInKnowledgeBase = findNode(knowledgeBase, node.path);
+                return nodeInKnowledgeBase ? hasDirectFiles(nodeInKnowledgeBase) : false;
+            }
             
             // 切换节点展开/折叠状态
             function toggleNodeExpansion(node) {
@@ -767,10 +897,21 @@
                         x = 0;
                         y = 0;
                         z = 0;
+                    } else if (level === 1) {
+                        // 二级目录在空间中均匀分布
+                        const level1Nodes = newGraphData.nodes.filter(n => n.level === 1);
+                        const indexInLevel = level1Nodes.findIndex(n => n.id === node.id);
+                        const angleStep = (Math.PI * 2) / level1Nodes.length;
+                        const angle = indexInLevel * angleStep;
+                        const radius = 15;
+                        
+                        x = Math.cos(angle) * radius;
+                        z = Math.sin(angle) * radius;
+                        y = -8;
                     } else {
-                        // 找到父节点
+                        // 三级及以下节点向外生长
                         const parentNode = newGraphData.nodes.find(n => n.id === node.parent);
-                        const parentPos = parentNode ? getUpdatedNodePosition(newGraphData, parentNode.id, currentPositions) : {x: 0, y: -6 * (level-1), z: 0};
+                        const parentPos = parentNode ? getUpdatedNodePosition(newGraphData, parentNode.id, currentPositions) : {x: 0, y: -8, z: 0};
                         
                         // 获取同级节点
                         const siblings = newGraphData.nodes.filter(n => n.level === level && n.parent === node.parent);
@@ -780,13 +921,13 @@
                         const angleStep = (Math.PI * 2) / Math.max(siblings.length, 1);
                         const angle = siblingIndex * angleStep;
                         
-                        // 根据层级调整半径，使节点更紧凑
-                        const radius = 8 + level * 3;
+                        // 根据层级调整半径
+                        const radius = 8 + level * 2;
                         
                         // 计算位置
                         x = parentPos.x + Math.cos(angle) * radius;
                         z = parentPos.z + Math.sin(angle) * radius;
-                        y = -level * 6; // 减小层级间距
+                        y = -level * 5;
                     }
                     
                     // 根据子节点数量调整节点大小
@@ -829,6 +970,9 @@
                     // 创建材质
                     const material = new BABYLON.StandardMaterial(`mat-${node.id}`, scene);
                     
+                    // 判断节点是否可点击
+                    const isClickable = node.children > 0 && (node.level >= 2 || (node.level === 1 && hasDirectFilesInKnowledgeBase(node)));
+                    
                     // 使用RGB值直接创建颜色，而不是FromHexString
                     let babylonColor;
                     if (node.type === 'file') {
@@ -858,7 +1002,15 @@
                     
                     material.diffuseColor = babylonColor;
                     material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-                    material.emissiveColor = babylonColor.scale(0.2);
+                    
+                    // 可点击节点有更高的自发光，使其更明显
+                    if (isClickable) {
+                        material.emissiveColor = babylonColor.scale(0.4);
+                        material.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+                    } else {
+                        material.emissiveColor = babylonColor.scale(0.2);
+                    }
+                    
                     nodeMesh.material = material;
                     
                     // 存储节点数据
