@@ -3,39 +3,33 @@ function convertToGraphData(node, maxLevel = 2, parentId = null, currentLevel = 
     const nodes = [];
     const links = [];
     
-    // 判断节点是否应该显示
-    const shouldShow = (currentLevel <= 1 && node.type === 'folder') || 
-                       (currentLevel === 2 && (node.type === 'folder' || (node.type === 'file' && expandedNodes.has(parentId)))) || 
-                       (currentLevel >= 3 && expandedNodes.has(parentId));
+    // 总是添加当前节点
+    nodes.push({
+        id: node.path || node.name,
+        name: node.name,
+        type: node.type,
+        level: node.level,
+        parent: parentId,
+        children: node.children ? node.children.length : 0,
+        path: node.path || node.name
+    });
     
-    // 只添加符合条件的节点
-    if (shouldShow) {
-        nodes.push({
-            id: node.path || node.name,
-            name: node.name,
-            type: node.type,
-            level: node.level,
-            parent: parentId,
-            children: node.children ? node.children.length : 0,
-            path: node.path || node.name
+    if (parentId) {
+        links.push({
+            source: parentId,
+            target: node.path || node.name
         });
-        
-        if (parentId) {
-            links.push({
-                source: parentId,
-                target: node.path || node.name
-            });
-        }
     }
     
     // 递归处理子节点
     if (node.children) {
         node.children.forEach(child => {
-            // 对于 level 1+ 的节点，只有在父节点被展开时才显示子节点
-            const shouldProcessChildren = (currentLevel < 1) || 
-                                         (currentLevel >= 1 && expandedNodes.has(node.path || node.name));
+            // 对于根节点（currentLevel 0），总是处理其所有子节点（一级目录）
+            // 对于其他节点，只有在当前节点被展开时才处理子节点
+            const shouldProcessChildren = (currentLevel === 0) || expandedNodes.has(node.path || node.name);
             
             if (shouldProcessChildren) {
+                // 递归处理子节点
                 const childData = convertToGraphData(child, maxLevel, node.path || node.name, currentLevel + 1, expandedNodes);
                 nodes.push(...childData.nodes);
                 links.push(...childData.links);
@@ -50,8 +44,12 @@ function convertToGraphData(node, maxLevel = 2, parentId = null, currentLevel = 
 function initGraph() {
     console.log('=== 初始化图形 ===');
     
-    // 获取图形数据 - 初始只显示 level 0/1/2 的 folder 节点
+    // 获取图形数据 - 初始只显示 level 0/1 的 folder 节点
     const expandedNodes = new Set();
+    // 初始不展开一级目录，不显示二级目录
+    knowledgeBase.children.forEach(level1Node => {
+        level1Node.__expanded = false;
+    });
     const graphData = convertToGraphData(knowledgeBase, 2, null, 0, expandedNodes);
     
     console.log('初始图形数据:', {
@@ -469,9 +467,8 @@ function initGraph() {
                     window.open(githubUrl, '_blank');
                 } else {
                     // 目录节点
-                    // level 2+ 的节点可以点击，level 0/1 的节点只有在下面直接是 file 时才可点击
-                    const canClick = (node.level >= 2) || 
-                                    (node.level <= 1 && hasDirectFilesInKnowledgeBase(node));
+                    // 所有目录节点都可以点击
+                    const canClick = true;
                     
                     console.log('目录节点点击判断:', {
                         level: node.level,
@@ -558,13 +555,10 @@ function initGraph() {
             if (targetNode) {
                 console.log('展开状态:', targetNode.__expanded);
                 
-                // 只展开当前节点的直接子节点，而不是所有层级的子节点
-                if (targetNode.__expanded && targetNode.children) {
-                    console.log('展开直接子节点');
-                    targetNode.children.forEach(child => {
-                        child.__expanded = true;
-                    });
-                }
+                // 不需要设置子节点的展开状态，convertToGraphData函数会根据父节点是否展开来决定是否显示子节点
+                console.log('节点展开状态已更新');
+                
+                
                 
                 // 收集所有展开的节点路径
                 const expandedNodes = new Set();
