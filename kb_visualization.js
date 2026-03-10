@@ -558,18 +558,12 @@ function initGraph() {
             if (targetNode) {
                 console.log('展开状态:', targetNode.__expanded);
                 
-                // 如果是 level 2+ 的节点，展开时需要展开所有子节点
-                if (node.level >= 2 && targetNode.__expanded) {
-                    console.log('展开所有子节点');
-                    function expandAllChildren(nodeData) {
-                        if (nodeData.children) {
-                            nodeData.children.forEach(child => {
-                                child.__expanded = true;
-                                expandAllChildren(child);
-                            });
-                        }
-                    }
-                    expandAllChildren(targetNode);
+                // 只展开当前节点的直接子节点，而不是所有层级的子节点
+                if (targetNode.__expanded && targetNode.children) {
+                    console.log('展开直接子节点');
+                    targetNode.children.forEach(child => {
+                        child.__expanded = true;
+                    });
                 }
                 
                 // 收集所有展开的节点路径
