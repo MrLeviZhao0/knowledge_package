@@ -3,4 +3,4 @@
 ## 访问链接
 
 ### 3D可视化页面
-https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/9cab510c301ce8732259a716a33c5c2312b6c330/index.html
+https://rawcdn.githack.com/MrLeviZhao0/knowledge_package/836e36a0ce71e96b9766ab708ecf7a1a89b004d5/index.html
