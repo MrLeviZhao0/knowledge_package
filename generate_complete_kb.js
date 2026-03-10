@@ -46,28 +46,28 @@ const knowledgeBase = {
             path: "业务模块知识",
             type: "folder",
             level: 1,
-            children: buildKnowledgeTree('业务模块知识', 2)
+            children: buildKnowledgeTree('业务模块知识', 2, '业务模块知识')
         },
         {
             name: "基础与面试",
             path: "基础与面试",
             type: "folder",
             level: 1,
-            children: buildKnowledgeTree('基础与面试', 2)
+            children: buildKnowledgeTree('基础与面试', 2, '基础与面试')
         },
         {
             name: "语言技巧知识",
             path: "语言技巧知识",
             type: "folder",
             level: 1,
-            children: buildKnowledgeTree('语言技巧知识', 2)
+            children: buildKnowledgeTree('语言技巧知识', 2, '语言技巧知识')
         },
         {
             name: "项目经验",
             path: "项目经验",
             type: "folder",
             level: 1,
-            children: buildKnowledgeTree('项目经验', 2)
+            children: buildKnowledgeTree('项目经验', 2, '项目经验')
         }
     ]
 };
