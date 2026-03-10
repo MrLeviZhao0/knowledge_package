@@ -1,4 +1,4 @@
-{
+const knowledgeBase = {
   "name": "知识库",
   "path": "",
   "type": "folder",
@@ -1923,4 +1923,4 @@
       ]
     }
   ]
-}
+};
