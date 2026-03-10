@@ -264,7 +264,7 @@ function initGraph() {
             const cosTheta = Math.cos(theta);
             
             // 计算方向向量：在父方向周围的球面上均匀分布
-            direction = parentToCurrentDirection.scale(cosPhi)
+            let direction = parentToCurrentDirection.scale(cosPhi)
                 .add(perpendicular1.scale(sinPhi * cosTheta))
                 .add(perpendicular2.scale(sinPhi * sinTheta))
                 .normalize();
@@ -462,6 +462,7 @@ function initGraph() {
                 if (node.type === 'file') {
                     console.log('这是文件节点，准备跳转到:', node.path);
                     // 文件节点，跳转到对应文档
+                    // 直接使用node.path作为完整路径，确保包含所有父目录
                     const githubPath = node.path.replace(/^\//, '');
                     const githubUrl = `https://github.com/MrLeviZhao0/knowledge_package/blob/main/${githubPath}`;
                     console.log('GitHub URL:', githubUrl);
