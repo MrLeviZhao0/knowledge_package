@@ -264,7 +264,7 @@ function initGraph() {
             const cosTheta = Math.cos(theta);
             
             // 计算方向向量：在父方向周围的球面上均匀分布
-            let direction = parentToCurrentDirection.scale(cosPhi)
+            direction = parentToCurrentDirection.scale(cosPhi)
                 .add(perpendicular1.scale(sinPhi * cosTheta))
                 .add(perpendicular2.scale(sinPhi * sinTheta))
                 .normalize();
