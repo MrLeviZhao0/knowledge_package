@@ -817,12 +817,6 @@ const knowledgeBase = {
           ]
         },
         {
-          "name": "业务模块知识体系通用Skill文档模板",
-          "path": "业务模块知识/业务模块知识体系通用Skill文档模板.md",
-          "type": "file",
-          "level": 2
-        },
-        {
           "name": "性能",
           "path": "业务模块知识/性能",
           "type": "folder",
@@ -1223,12 +1217,6 @@ const knowledgeBase = {
               ]
             }
           ]
-        },
-        {
-          "name": "基础技术八股文知识体系Skill文档模板",
-          "path": "基础与面试/基础技术八股文知识体系Skill文档模板.md",
-          "type": "file",
-          "level": 2
         },
         {
           "name": "安全",
@@ -1861,12 +1849,6 @@ const knowledgeBase = {
         {
           "name": "语言技巧知识-smali",
           "path": "语言技巧知识/语言技巧知识-smali.md",
-          "type": "file",
-          "level": 2
-        },
-        {
-          "name": "语言技巧知识体系Skill文档模板",
-          "path": "语言技巧知识/语言技巧知识体系Skill文档模板.md",
           "type": "file",
           "level": 2
         }
