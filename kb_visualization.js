@@ -462,7 +462,10 @@ function initGraph() {
                 if (node.type === 'file') {
                     console.log('这是文件节点，准备跳转到:', node.path);
                     // 文件节点，跳转到对应文档
-                    window.open(node.path, '_blank');
+                    const githubPath = node.path.replace(/^\//, '');
+                    const githubUrl = `https://github.com/MrLeviZhao0/knowledge_package/blob/main/${githubPath}`;
+                    console.log('GitHub URL:', githubUrl);
+                    window.open(githubUrl, '_blank');
                 } else {
                     // 目录节点
                     // level 2+ 的节点可以点击，level 0/1 的节点只有在下面直接是 file 时才可点击
