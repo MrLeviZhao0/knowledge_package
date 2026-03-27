@@ -466,6 +466,496 @@ WindowState findTargetWindow(InputEvent event) {
 }
 ```
 
+## 7. 多窗口管理
+
+### 7.1 TaskFragment管理
+
+#### 7.1.1 TaskFragment创建与布局
+TaskFragment支持灵活的多窗口任务片段管理，允许将一个Task分割成多个显示区域。
+
+```java
+// TaskFragment控制器
+public class TaskFragmentController {
+    private final WindowManagerService mService;
+    private final ITaskFragmentOrganizer mOrganizer;
+    
+    // 创建TaskFragment
+    public void createTaskFragment(Task task, Rect bounds) {
+        // 1. 创建TaskFragment实例
+        TaskFragment fragment = new TaskFragment(task);
+        fragment.setBounds(bounds);
+        fragment.setOrganizer(mOrganizer);
+        
+        // 2. 添加到Task
+        task.addChild(fragment, POSITION_TOP);
+        
+        // 3. 触发布局计算
+        task.layoutNeeded = true;
+        
+        // 4. 通知组织者
+        notifyTaskFragmentCreated(fragment);
+    }
+    
+    // 分割Task为多个TaskFragment
+    public void splitTask(Task task, Rect[] boundsArray) {
+        for (Rect bounds : boundsArray) {
+            createTaskFragment(task, bounds);
+        }
+        
+        // 执行布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+    
+    // 调整TaskFragment大小
+    public void resizeTaskFragment(TaskFragment fragment, Rect newBounds) {
+        fragment.setBounds(newBounds);
+        
+        // 触发动画过渡
+        animateTaskFragmentBounds(fragment, newBounds);
+        
+        // 通知组织者
+        notifyTaskFragmentBoundsChanged(fragment, newBounds);
+    }
+    
+    // 处理TaskFragment中的Activity分配
+    public void assignActivityToFragment(
+        ActivityRecord activity,
+        TaskFragment fragment
+    ) {
+        // 将Activity分配到指定TaskFragment
+        activity.reparent(fragment);
+        fragment.addActivity(activity);
+        
+        // 更新可见性
+        updateFragmentVisibility(fragment);
+    }
+}
+```
+
+#### 7.1.2 TaskFragment可见性管理
+
+```java
+// TaskFragment可见性管理
+public class TaskFragmentVisibilityController {
+    // 更新TaskFragment可见性
+    public void updateVisibility(TaskFragment fragment) {
+        // 检查是否有可见Activity
+        boolean hasVisibleActivity = hasVisibleActivities(fragment);
+        
+        // 检查边界是否有效
+        boolean hasValidBounds = isValidBounds(fragment.getBounds());
+        
+        // 设置可见性
+        boolean shouldBeVisible = hasVisibleActivity && hasValidBounds;
+        
+        if (fragment.isVisible() != shouldBeVisible) {
+            fragment.setVisible(shouldBeVisible);
+            
+            // 通知组织者
+            notifyVisibilityChanged(fragment, shouldBeVisible);
+        }
+    }
+    
+    // 处理TaskFragment遮挡关系
+    public void handleOcclusion(TaskFragment[] fragments) {
+        // 按Z序排序
+        sortByZOrder(fragments);
+        
+        Region occludedRegion = new Region();
+        
+        for (TaskFragment fragment : fragments) {
+            if (fragment.isVisible()) {
+                // 计算可见区域（扣除遮挡部分）
+                Region visibleRegion = new Region(fragment.getBounds());
+                visibleRegion.op(occludedRegion, Region.Op.DIFFERENCE);
+                
+                fragment.setVisibleRegion(visibleRegion);
+                
+                // 更新遮挡区域
+                if (!fragment.isTranslucent()) {
+                    occludedRegion.op(fragment.getBounds(), Region.Op.UNION);
+                }
+            }
+        }
+    }
+}
+```
+
+### 7.2 自由窗口模式
+
+#### 7.2.1 自由窗口创建与管理
+
+```java
+// 自由窗口管理
+public class FreeformWindowManager {
+    private final WindowManagerService mService;
+    
+    // 创建自由窗口
+    public WindowState createFreeformWindow(
+        ActivityRecord activity,
+        Rect bounds
+    ) {
+        // 1. 创建WindowState
+        WindowState ws = new WindowState(mService, activity);
+        ws.setBounds(bounds);
+        ws.setWindowingMode(WINDOWING_MODE_FREEFORM);
+        
+        // 2. 设置窗口装饰
+        enableWindowDecorations(ws);
+        
+        // 3. 配置自由窗口参数
+        FreeformWindowParams params = new FreeformWindowParams();
+        params.setBounds(bounds);
+        params.setResizable(true);
+        params.setDecorType(DECOR_TYPE_FREEFORM);
+        
+        // 4. 添加到DisplayArea
+        DisplayArea freeformArea = getFreeformDisplayArea();
+        freeformArea.addChild(ws);
+        
+        return ws;
+    }
+    
+    // 窗口拖拽处理
+    public void handleWindowDrag(WindowState ws, int deltaX, int deltaY) {
+        Rect bounds = new Rect(ws.getBounds());
+        bounds.offset(deltaX, deltaY);
+        
+        // 限制在屏幕范围内
+        constrainToBounds(bounds);
+        
+        // 更新窗口位置
+        ws.setBounds(bounds);
+        
+        // 触发布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+    
+    // 窗口调整大小
+    public void handleWindowResize(
+        WindowState ws,
+        int newWidth,
+        int newHeight
+    ) {
+        // 检查最小/最大尺寸限制
+        int width = Math.max(ws.getMinWidth(), newWidth);
+        int height = Math.max(ws.getMinHeight(), newHeight);
+        
+        Rect bounds = new Rect(ws.getBounds());
+        bounds.right = bounds.left + width;
+        bounds.bottom = bounds.top + height;
+        
+        // 更新窗口大小
+        ws.setBounds(bounds);
+        
+        // 触发重新布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+    
+    // 窗口最小化
+    public void minimizeWindow(WindowState ws) {
+        // 最小化到任务栏
+        Taskbar taskbar = getTaskbar();
+        taskbar.addMinimizedWindow(ws);
+        
+        ws.setVisible(false);
+        ws.setMinimized(true);
+    }
+}
+```
+
+#### 7.2.2 窗口层级管理
+
+```java
+// 窗口层级管理
+public class WindowLayerController {
+    // 调整窗口层级
+    public void bringToFront(WindowState ws) {
+        DisplayArea area = ws.getDisplayArea();
+        
+        // 移到最上层
+        area.positionChildAt(POSITION_TOP, ws);
+        
+        // 更新输入窗口
+        mService.mInputMonitor.updateInputWindowsLw(false);
+    }
+    
+    // 处理窗口层级冲突
+    public void resolveLayerConflicts(WindowState[] windows) {
+        // 按优先级和类型排序
+        Arrays.sort(windows, (a, b) -> {
+            int priorityA = getWindowPriority(a);
+            int priorityB = getWindowPriority(b);
+            
+            if (priorityA != priorityB) {
+                return priorityB - priorityA;
+            }
+            
+            return a.getLayer() - b.getLayer();
+        });
+        
+        // 重新分配层级
+        for (int i = 0; i < windows.length; i++) {
+            windows[i].setLayer(i);
+        }
+    }
+    
+    // 窗口优先级
+    private int getWindowPriority(WindowState ws) {
+        // 焦点窗口优先级最高
+        if (ws.isFocused()) {
+            return 100;
+        }
+        
+        // 系统窗口次之
+        if (ws.isSystemWindow()) {
+            return 80;
+        }
+        
+        // 应用窗口
+        return 50;
+    }
+}
+```
+
+### 7.3 桌面模式与多显示器
+
+#### 7.3.1 多显示器支持
+
+```java
+// 多显示器管理
+public class DisplayWindowController {
+    // 添加外部显示器
+    public void addExternalDisplay(DisplayDevice display) {
+        // 1. 创建DisplayContent
+        DisplayContent dc = mService.createDisplayContent(display);
+        
+        // 2. 配置桌面模式
+        if (isDesktopModeSupported()) {
+            enableDesktopMode(dc);
+        }
+        
+        // 3. 设置显示区域
+        setupDisplayAreas(dc);
+        
+        // 4. 配置输入通道
+        setupInputChannels(dc);
+    }
+    
+    // 启用桌面模式
+    private void enableDesktopMode(DisplayContent dc) {
+        // 创建桌面显示区域
+        DisplayArea desktopArea = createDesktopArea(dc);
+        
+        // 启用任务栏
+        Taskbar taskbar = createTaskbar(dc);
+        dc.addDisplayArea(taskbar);
+        
+        // 配置自由窗口支持
+        dc.setSupportsFreeform(true);
+        
+        // 设置默认窗口模式
+        dc.setDefaultWindowingMode(WINDOWING_MODE_FREEFORM);
+    }
+    
+    // 显示器热插拔处理
+    public void handleDisplayHotplug(DisplayDevice display, boolean connected) {
+        if (connected) {
+            addExternalDisplay(display);
+        } else {
+            removeExternalDisplay(display);
+        }
+    }
+}
+```
+
+#### 7.3.2 任务栏实现
+
+```java
+// 任务栏实现
+public class Taskbar {
+    private final DisplayContent mDisplayContent;
+    private final List<WindowState> mMinimizedWindows = new ArrayList<>();
+    
+    // 添加最小化窗口
+    public void addMinimizedWindow(WindowState ws) {
+        mMinimizedWindows.add(ws);
+        
+        // 更新任务栏UI
+        updateTaskbarUI();
+    }
+    
+    // 恢复窗口
+    public void restoreWindow(WindowState ws) {
+        mMinimizedWindows.remove(ws);
+        
+        // 恢复窗口显示
+        ws.setVisible(true);
+        ws.setMinimized(false);
+        
+        // 将窗口移到前台
+        mDisplayContent.positionChildAt(POSITION_TOP, ws);
+        
+        updateTaskbarUI();
+    }
+    
+    // 更新任务栏UI
+    private void updateTaskbarUI() {
+        // 通知任务栏更新显示
+        Intent intent = new Intent(ACTION_UPDATE_TASKBAR);
+        intent.putParcelableArrayListExtra("windows", 
+            new ArrayList<>(mMinimizedWindows));
+        mContext.sendBroadcast(intent);
+    }
+}
+```
+
+### 7.4 分屏模式
+
+#### 7.4.1 分屏布局管理
+
+```java
+// 分屏布局管理
+public class SplitScreenController {
+    // 进入分屏模式
+    public void enterSplitScreen(Task task) {
+        // 1. 创建分屏容器
+        DisplayArea splitArea = createSplitScreenArea();
+        
+        // 2. 分割Task为两个TaskFragment
+        Rect leftBounds = new Rect(0, 0, screenWidth / 2, screenHeight);
+        Rect rightBounds = new Rect(screenWidth / 2, 0, screenWidth, screenHeight);
+        
+        TaskFragment leftFragment = mTaskFragmentController
+            .createTaskFragment(task, leftBounds);
+        TaskFragment rightFragment = mTaskFragmentController
+            .createTaskFragment(task, rightBounds);
+        
+        // 3. 配置分屏参数
+        configureSplitScreen(splitArea, leftFragment, rightFragment);
+        
+        // 4. 触发布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+    
+    // 调整分屏分割线
+    public void adjustSplitDivider(float position) {
+        // 计算新的边界
+        int dividerX = (int)(screenWidth * position);
+        
+        Rect leftBounds = new Rect(0, 0, dividerX, screenHeight);
+        Rect rightBounds = new Rect(dividerX, 0, screenWidth, screenHeight);
+        
+        // 更新TaskFragment边界
+        mLeftFragment.setBounds(leftBounds);
+        mRightFragment.setBounds(rightBounds);
+        
+        // 触发布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+    
+    // 退出分屏模式
+    public void exitSplitScreen() {
+        // 移除分屏容器
+        removeSplitScreenArea();
+        
+        // 合并TaskFragment
+        mergeTaskFragments();
+        
+        // 触发布局
+        mService.mWindowPlacerLocked.performSurfacePlacement();
+    }
+}
+```
+
+### 7.5 窗口过渡动画
+
+#### 7.5.1 新的动画框架
+
+```java
+// 窗口过渡动画控制器
+public class WindowTransitionController {
+    // 启动过渡动画
+    public void startTransition(
+        WindowState from,
+        WindowState to,
+        TransitionInfo info
+    ) {
+        // 1. 创建动画实例
+        Transition animation = createTransition(info);
+        
+        // 2. 设置共享元素
+        if (info.hasSharedElements()) {
+            setupSharedElementTransition(animation, info);
+        }
+        
+        // 3. 配置动画参数
+        animation.setDuration(info.getDuration());
+        animation.setInterpolator(info.getInterpolator());
+        
+        // 4. 启动动画
+        animation.start();
+    }
+    
+    // 共享元素过渡
+    private void setupSharedElementTransition(
+        Transition animation,
+        TransitionInfo info
+    ) {
+        for (SharedElement element : info.getSharedElements()) {
+            // 计算元素位置和大小变化
+            Rect fromBounds = element.getFromBounds();
+            Rect toBounds = element.getToBounds();
+            
+            // 创建共享元素动画
+            Transition elementTransition = new SharedElementTransition(
+                element.getView(),
+                fromBounds,
+                toBounds
+            );
+            
+            animation.addTransition(elementTransition);
+        }
+    }
+}
+```
+
+#### 7.5.2 硬件加速动画
+
+```java
+// 硬件加速动画实现
+public class HardwareAnimationController {
+    // 应用硬件加速动画
+    public void applyHardwareAnimation(
+        WindowState ws,
+        Animation anim
+    ) {
+        SurfaceControl sc = ws.getSurfaceControl();
+        
+        // 创建RenderNode
+        RenderNode node = sc.getRenderNode();
+        
+        // 设置动画属性
+        if (anim instanceof AlphaAnimation) {
+            node.setAlpha(anim.getAlpha());
+        } else if (anim instanceof ScaleAnimation) {
+            node.setScale(anim.getScaleX(), anim.getScaleY());
+        } else if (anim instanceof TranslateAnimation) {
+            node.setTranslation(anim.getTranslationX(), 
+                                anim.getTranslationY());
+        }
+        
+        // 启用硬件加速
+        node.setUseHardwareAcceleration(true);
+        
+        // 提交事务
+        SurfaceControl.Transaction t = new SurfaceControl.Transaction();
+        t.setRenderNode(node);
+        t.apply();
+    }
+}
+```
+
 ## 8. 总结
 WMS作为Android系统的核心服务之一，负责管理所有应用程序的窗口显示、布局和输入事件分发。它通过与SurfaceFlinger、InputManagerService等系统服务紧密协作，共同完成Android系统的UI显示和用户交互功能。
 

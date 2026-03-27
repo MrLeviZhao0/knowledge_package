@@ -121,6 +121,177 @@ SurfaceFlinger通过`LayerVector`管理所有活跃的图层：
 - **后台缓冲区**：正在合成的缓冲区  
 - **空闲缓冲区**：可用的缓冲区池
 
+## 4. 帧率控制数据结构
+
+### 4.1 RefreshRate（刷新率）
+**定义**：描述显示器支持的刷新率配置
+
+```cpp
+struct RefreshRate {
+    int id;                    // 刷新率ID
+    float fps;                 // 帧率值（Hz）
+    nsecs_t period;            // 周期（纳秒）
+    int configId;              // 显示配置ID
+    HwcConfigIndexType hwcId;  // HWC配置索引
+    
+    bool operator==(const RefreshRate& other) const {
+        return fps == other.fps && configId == other.configId;
+    }
+    
+    bool operator!=(const RefreshRate& other) const {
+        return !(*this == other);
+    }
+};
+```
+
+### 4.2 RefreshRateConfigs（刷新率配置）
+**定义**：管理所有支持的刷新率配置
+
+```cpp
+class RefreshRateConfigs {
+public:
+    // 获取支持的刷新率列表
+    const std::vector<RefreshRate>& getRefreshRates() const;
+    
+    // 获取当前刷新率
+    const RefreshRate& getCurrentRefreshRate() const;
+    
+    // 获取默认刷新率
+    const RefreshRate& getDefaultRefreshRate() const;
+    
+    // 获取最小刷新率
+    const RefreshRate& getMinRefreshRate() const;
+    
+    // 获取最大刷新率
+    const RefreshRate& getMaxRefreshRate() const;
+    
+    // 选择最优刷新率
+    RefreshRate selectBestRefreshRate(
+        float desiredFps,
+        const FrameRateOverride& override);
+    
+private:
+    std::vector<RefreshRate> mRefreshRates;  // 支持的刷新率列表
+    RefreshRate mCurrentRefreshRate;          // 当前刷新率
+    RefreshRate mMinRefreshRate;              // 最小刷新率
+    RefreshRate mMaxRefreshRate;              // 最大刷新率
+    RefreshRate mDefaultRefreshRate;          // 默认刷新率
+};
+```
+
+### 4.3 FrameRateOverride（帧率覆盖请求）
+**定义**：应用请求的帧率覆盖配置
+
+```cpp
+struct FrameRateOverride {
+    uid_t uid;           // 应用UID
+    float frameRate;     // 请求的帧率（0表示取消请求）
+    bool seamless;       // 是否支持无缝切换
+    
+    bool operator==(const FrameRateOverride& other) const {
+        return uid == other.uid;
+    }
+    
+    bool operator!=(const FrameRateOverride& other) const {
+        return !(*this == other);
+    }
+};
+```
+
+### 4.4 ADFRConfig（ADFR配置）
+**定义**：自适应显示帧率（Adaptive Display Frame Rate）配置
+
+```cpp
+struct ADFRConfig {
+    bool enabled;                    // 是否启用ADFR
+    float minFrameRate;              // 最小帧率
+    float maxFrameRate;              // 最大帧率
+    float defaultFrameRate;          // 默认帧率
+    int switchDelayMs;               // 切换延迟（毫秒）
+    bool seamlessSwitch;             // 无缝切换
+    
+    // 功耗感知参数
+    struct PowerParameters {
+        float lowPowerThreshold;         // 低功耗阈值
+        float highPowerThreshold;        // 高功耗阈值
+        int thermalThrottleLevel;        // 热限制级别
+        bool batterySaverMode;           // 省电模式
+    } powerParams;
+    
+    // 场景检测参数
+    struct SceneDetectionParams {
+        bool enableGameDetection;        // 游戏检测
+        bool enableVideoDetection;       // 视频检测
+        bool enableStaticDetection;      // 静态内容检测
+        int detectionIntervalMs;         // 检测间隔
+    } sceneParams;
+};
+```
+
+### 4.5 FrameRateHint（帧率提示）
+**定义**：应用提供的帧率范围提示
+
+```cpp
+struct FrameRateHint {
+    float minFrameRate;     // 最小帧率
+    float maxFrameRate;     // 最大帧率
+    float preferredRate;    // 偏好帧率
+    int priority;           // 优先级
+    
+    enum Priority {
+        PRIORITY_LOW = 0,
+        PRIORITY_NORMAL = 1,
+        PRIORITY_HIGH = 2
+    };
+};
+```
+
+### 4.6 VRRParams（可变刷新率参数）
+**定义**：Variable Refresh Rate（VRR）配置参数
+
+```cpp
+struct VRRParams {
+    bool enabled;                  // 是否启用VRR
+    float minRefreshRate;          // 最小刷新率
+    float maxRefreshRate;          // 最大刷新率
+    bool enableLFC;                // Low Framerate Compensation
+    
+    // LFC参数
+    struct LFCParams {
+        float minRate;             // LFC最小帧率
+        int multiplier;            // 倍频系数
+    } lfcParams;
+};
+```
+
+### 4.7 FrameRateSelector（帧率选择器）
+**定义**：智能选择最优帧率的核心类
+
+```cpp
+class FrameRateSelector {
+public:
+    // 选择最优帧率
+    RefreshRate selectOptimalFrameRate(
+        const std::vector<FrameRateOverride>& overrides,
+        const PowerState& powerState);
+    
+    // 计算切换代价
+    int calculateSwitchCost(
+        const RefreshRate& from,
+        const RefreshRate& to);
+    
+    // 检查是否支持无缝切换
+    bool canSwitchSeamlessly(
+        const RefreshRate& from,
+        const RefreshRate& to);
+    
+private:
+    RefreshRateConfigs mConfigs;     // 刷新率配置
+    ADFRConfig mADFRConfig;          // ADFR配置
+    SceneDetector mSceneDetector;    // 场景检测器
+};
+```
+
 ## 4. 数据流模型
 
 ### 4.1 应用数据流

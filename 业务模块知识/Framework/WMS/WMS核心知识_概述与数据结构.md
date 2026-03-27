@@ -168,3 +168,166 @@ public interface WindowManagerPolicy {
 - `mFinishedStarting`：ArrayList<AppWindowToken>类型，保存已完成启动的应用窗口令牌
 - `mWindowContainers`：ArrayList<WindowContainer<?>>类型，保存所有窗口容器
 - `mDisplayContents`：ArrayList<DisplayContent>类型，保存所有显示内容
+
+### 2.7 TaskFragment（多窗口任务片段）
+**定义**：TaskFragment是Activity的容器，支持更灵活的多窗口管理。一个Task可以包含多个TaskFragment，实现分屏、自由窗口等多种显示模式。
+
+**核心成员变量**：
+```java
+public class TaskFragment extends WindowContainer<WindowContainer> {
+    // 关联的顶部Activity
+    private ActivityRecord mTopActivity;
+    // TaskFragment的边界
+    private final Rect mBounds = new Rect();
+    // 是否可见
+    private boolean mVisible;
+    // 所属的Task
+    private Task mTask;
+    // 组织者接口
+    private ITaskFragmentOrganizer mOrganizer;
+    // 组织者的令牌
+    private final IBinder mOrganizerToken;
+    // 是否等待组织者回调
+    private boolean mWaitingOnOrganizer;
+    // 嵌套等级
+    private int mNestingCount;
+}
+```
+
+### 2.8 TaskFragmentOrganizer
+**定义**：管理TaskFragment的生命周期和布局的接口，应用通过实现此接口来控制TaskFragment的行为。
+
+**核心接口方法**：
+```java
+public interface ITaskFragmentOrganizer extends IInterface {
+    // TaskFragment创建回调
+    void onTaskFragmentCreated(in TaskFragmentCreationParams params);
+    
+    // TaskFragment销毁回调
+    void onTaskFragmentDestroyed(IBinder taskFragmentToken);
+    
+    // TaskFragment边界变化回调
+    void onTaskFragmentBoundsChanged(IBinder taskFragmentToken, in Rect bounds);
+    
+    // TaskFragment可见性变化回调
+    void onTaskFragmentVisibilityChanged(IBinder taskFragmentToken, boolean visible);
+    
+    // TaskFragment错误回调
+    void onTaskFragmentError(IBinder taskFragmentToken, int errorCode, in Throwable exception);
+    
+    // TaskFragment大小变化开始
+    void onTaskFragmentResizeStart(IBinder taskFragmentToken);
+    
+    // TaskFragment大小变化结束
+    void onTaskFragmentResizeFinish(IBinder taskFragmentToken);
+}
+```
+
+### 2.9 TaskFragmentInfo
+**定义**：描述TaskFragment状态的数据结构，用于在WMS和客户端之间传递信息。
+
+**核心成员变量**：
+```java
+public final class TaskFragmentInfo implements Parcelable {
+    // TaskFragment令牌
+    private final IBinder mToken;
+    // 对应的Task令牌
+    private final IBinder mTaskToken;
+    // 边界
+    private final Rect mBounds;
+    // 顶部Activity信息
+    private final ActivityInfo mTopActivityInfo;
+    // 是否可见
+    private final boolean mVisible;
+    // 是否最小化
+    private final boolean mMinimized;
+    // 是否最大化
+    private final boolean mMaximized;
+    // 窗口模式
+    private final int mWindowingMode;
+    // 组织者令牌
+    private final IBinder mOrganizerToken;
+}
+```
+
+### 2.10 DisplayArea（显示区域）
+**定义**：显示区域的抽象，用于管理显示器上的不同区域，如状态栏区域、导航栏区域、应用区域等。
+
+**核心成员变量**：
+```java
+public class DisplayArea<T extends WindowContainer> extends WindowContainer<T> {
+    // 显示区域类型
+    private final Type mType;
+    // 显示区域层级
+    private final int mLayer;
+    // 是否可见
+    private boolean mVisible;
+    // 是否可聚焦
+    private boolean mFocusable;
+    // 边界
+    private final Rect mBounds = new Rect();
+    // 所属DisplayContent
+    private final DisplayContent mDisplayContent;
+    
+    // 显示区域类型枚举
+    public enum Type {
+        // 根显示区域
+        ROOT,
+        // 应用显示区域
+        APPLICATION,
+        // 系统装饰显示区域（如状态栏、导航栏）
+        SYSTEM_DECOR,
+        // 分屏显示区域
+        SPLIT_SCREEN,
+        // 任务栏显示区域
+        TASKBAR
+    }
+}
+```
+
+### 2.11 多显示器支持数据结构
+
+**VirtualDisplay（虚拟显示器）**：
+```java
+public class VirtualDisplay {
+    // 显示器ID
+    private final int mDisplayId;
+    // 显示器名称
+    private final String mName;
+    // Surface
+    private final Surface mSurface;
+    // 宽度
+    private final int mWidth;
+    // 高度
+    private final int mHeight;
+    // DPI
+    private final int mDensityDpi;
+    // 标志
+    private final int mFlags;
+    // 回调
+    private final Callback mCallback;
+    // 渲染线程
+    private final SurfaceControl mSurfaceControl;
+}
+```
+
+**FreeformWindow（自由窗口）**：
+```java
+public class FreeformWindowParams {
+    // 窗口边界
+    private final Rect mBounds;
+    // 窗口标题
+    private final String mTitle;
+    // 窗口图标
+    private final Bitmap mIcon;
+    // 是否可调整大小
+    private final boolean mResizable;
+    // 最小尺寸
+    private final int mMinWidth;
+    private final int mMinHeight;
+    // 最大尺寸
+    private final int mMaxWidth;
+    private final int mMaxHeight;
+    // 窗口装饰类型
+    private final int mDecorType;
+}

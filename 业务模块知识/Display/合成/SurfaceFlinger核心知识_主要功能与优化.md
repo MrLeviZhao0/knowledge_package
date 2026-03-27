@@ -56,52 +56,264 @@ void SurfaceFlinger::computeVisibleRegions() {
 
 ### 1.2 帧率管理功能
 
-#### 1.2.1 帧率选择机制
+#### 1.2.1 ADFR智能帧率调节
+ADFR（Adaptive Display Frame Rate）是智能的自适应显示帧率系统，能够根据场景、功耗和系统状态动态调整帧率。
+
 ```cpp
-// 帧率选择算法
-RefreshRate SurfaceFlinger::chooseRefreshRate() {
+// ADFR智能帧率调节算法
+RefreshRate SurfaceFlinger::selectOptimalFrameRate() {
     ATRACE_CALL();
     
-    // 1. 收集所有应用的帧率请求
-    FrameRateOverride overrides = collectFrameRateOverrides();
+    // 1. 场景检测
+    SceneInfo scene = detectCurrentScene();
     
-    // 2. 考虑系统策略（热限制、功耗等）
-    RefreshRateConstraints constraints = getSystemConstraints();
+    // 2. 获取功耗状态
+    PowerState powerState = getPowerState();
     
-    // 3. 选择最优刷新率
-    RefreshRate selectedRate = mRefreshRateSelector->selectRefreshRate(
-        overrides, constraints);
+    // 3. 收集应用帧率请求
+    std::vector<FrameRateOverride> overrides = 
+        collectFrameRateOverrides();
     
-    // 4. 应用刷新率变更
-    if (selectedRate != mCurrentRefreshRate) {
-        performRefreshRateSwitch(selectedRate);
+    // 4. 计算最优帧率
+    RefreshRate optimal = calculateOptimalRate(
+        scene, powerState, overrides);
+    
+    // 5. 平滑切换
+    smoothTransitionToRate(optimal);
+    
+    return optimal;
+}
+
+// 场景检测算法
+SceneInfo SurfaceFlinger::detectCurrentScene() {
+    SceneInfo info;
+    
+    // 检测游戏场景
+    if (isGameRunning()) {
+        info.type = SCENE_GAME;
+        info.motionLevel = detectMotionLevel();
+        info.touchActive = isTouchActive();
+        info.targetFps = getGameTargetFps();
+    }
+    // 检测视频场景
+    else if (isVideoPlaying()) {
+        info.type = SCENE_VIDEO;
+        info.videoFps = detectVideoFrameRate();
+        info.targetFps = matchVideoFrameRate(info.videoFps);
+    }
+    // 检测UI场景
+    else if (isUIApp(getTopApplication())) {
+        info.type = SCENE_UI;
+        info.scrollActive = isScrollActive();
+        info.targetFps = DEFAULT_REFRESH_RATE;
+    }
+    // 检测静态场景
+    else if (isStaticContent()) {
+        info.type = SCENE_STATIC;
+        info.targetFps = MIN_REFRESH_RATE;
     }
     
-    return selectedRate;
+    return info;
+}
+
+// 计算最优帧率
+RefreshRate SurfaceFlinger::calculateOptimalRate(
+    const SceneInfo& scene,
+    const PowerState& power,
+    const std::vector<FrameRateOverride>& overrides
+) {
+    float targetRate = scene.targetFps;
+    
+    // 应用帧率覆盖请求
+    for (const auto& override : overrides) {
+        if (shouldApplyOverride(override)) {
+            targetRate = override.frameRate;
+            break;
+        }
+    }
+    
+    // 功耗调整
+    if (power.batteryLevel < LOW_BATTERY_THRESHOLD) {
+        targetRate = std::min(targetRate, powerSavingRate);
+    }
+    
+    // 热限制调整
+    if (power.thermalLevel > THERMAL_WARNING_LEVEL) {
+        targetRate = std::min(targetRate, thermalLimitedRate);
+    }
+    
+    // 查找最接近的支持帧率
+    return mRefreshRateConfigs->selectBestRefreshRate(targetRate);
+}
+
+// 平滑过渡
+void SurfaceFlinger::smoothTransitionToRate(float targetRate) {
+    float currentRate = getCurrentFrameRate();
+    
+    // 如果支持无缝切换
+    if (canSwitchSeamlessly(currentRate, targetRate)) {
+        performSeamlessSwitch(targetRate);
+    } else {
+        performNormalSwitch(targetRate);
+    }
 }
 ```
 
-#### 1.2.2 多刷新率支持
+#### 1.2.2 无缝刷新率切换
+无缝切换允许在VSync间隙内完成帧率切换，避免黑屏或闪烁。
+
 ```cpp
-// 支持动态刷新率切换
-void SurfaceFlinger::setRefreshRate(const RefreshRate& rate) {
+// 无缝刷新率切换实现
+status_t SurfaceFlinger::performSeamlessSwitch(float targetRate) {
     ATRACE_CALL();
     
-    // 1. 验证刷新率是否支持
-    if (!isRefreshRateSupported(rate)) {
-        ALOGW("Refresh rate %f not supported", rate.getValue());
-        return;
+    // 1. 准备新配置
+    DisplayConfig newConfig = prepareNewConfig(targetRate);
+    
+    // 2. 等待合适的VSync时机
+    nsecs_t vsyncTime = waitForVSyncOpportunity();
+    
+    // 3. 在VSync间隙切换配置
+    status_t result = mDisplay->setActiveConfigWithSeamlessSwitch(
+        newConfig, vsyncTime);
+    
+    // 4. 验证切换成功
+    if (result == NO_ERROR) {
+        mCurrentRefreshRate = targetRate;
+        notifyFrameRateChanged(targetRate);
     }
     
-    // 2. 更新VSync周期
-    mVsyncController->setPeriod(rate.getPeriodNsecs());
-    
-    // 3. 通知显示设备
-    for (const auto& [token, display] : mDisplays) {
-        display->setActiveConfig(rate.getConfigId());
+    return result;
+}
+
+// 检查是否支持无缝切换
+bool SurfaceFlinger::canSwitchSeamlessly(float fromRate, float toRate) {
+    // 检查硬件支持
+    if (!mDisplay->supportsSeamlessSwitch()) {
+        return false;
     }
     
-    mCurrentRefreshRate = rate;
+    // 检查是否在支持的无缝切换范围内
+    return mSeamlessSwitchRanges.isInRange(fromRate, toRate);
+}
+```
+
+#### 1.2.3 VRR可变刷新率支持
+VRR（Variable Refresh Rate）允许显示器精确匹配内容帧率。
+
+```cpp
+// VRR支持实现
+class VariableRefreshRateController {
+public:
+    // 启用VRR
+    status_t enableVRR() {
+        if (!mDisplay->supportsVRR()) {
+            return INVALID_OPERATION;
+        }
+        
+        VRRParams params;
+        params.minRefreshRate = MIN_VRR_RATE;
+        params.maxRefreshRate = MAX_VRR_RATE;
+        params.enableLFC = true;
+        
+        return mDisplay->setVRRParams(params);
+    }
+    
+    // 动态调整帧率
+    void adjustFrameRate(float contentFrameRate) {
+        if (!mVREnabled) {
+            return;
+        }
+        
+        // VRR可以精确匹配内容帧率
+        if (contentFrameRate < MIN_VRR_RATE) {
+            // 使用LFC（Low Framerate Compensation）倍频
+            float multiplier = ceil(MIN_VRR_RATE / contentFrameRate);
+            setDisplayRate(contentFrameRate * multiplier);
+        } else {
+            setDisplayRate(contentFrameRate);
+        }
+    }
+};
+```
+
+#### 1.2.4 功耗感知帧率策略
+根据电池电量、热状态等功耗因素动态调整帧率。
+
+```cpp
+// 功耗感知帧率策略
+float SurfaceFlinger::adjustFrameRateForPower(
+    float requestedRate,
+    const PowerState& power
+) {
+    float adjustedRate = requestedRate;
+    
+    // 电池电量影响
+    if (power.batteryLevel < CRITICAL_BATTERY_LEVEL) {
+        // 极低电量：强制最低帧率
+        adjustedRate = MIN_POWER_SAVING_RATE;
+    } else if (power.batteryLevel < LOW_BATTERY_LEVEL) {
+        // 低电量：适度降低
+        adjustedRate *= 0.75f;
+    } else if (power.powerSaveMode) {
+        // 省电模式：降低帧率
+        adjustedRate *= 0.5f;
+    }
+    
+    // 热状态影响
+    switch (power.thermalStatus) {
+        case THERMAL_STATUS_SEVERE:
+            adjustedRate = std::min(adjustedRate, 30.0f);
+            break;
+        case THERMAL_STATUS_MODERATE:
+            adjustedRate *= 0.75f;
+            break;
+        case THERMAL_STATUS_LIGHT:
+            adjustedRate *= 0.9f;
+            break;
+    }
+    
+    return adjustedRate;
+}
+```
+
+#### 1.2.5 帧率请求处理
+处理应用通过SurfaceControl提交的帧率请求。
+
+```cpp
+// 帧率请求处理
+status_t SurfaceFlinger::setFrameRate(
+    const sp<IBinder>& handle,
+    float frameRate,
+    int compatibility,
+    int changeFrameRateStrategy
+) {
+    ATRACE_CALL();
+    
+    // 1. 查找图层
+    sp<Layer> layer = getLayer(handle);
+    if (layer == nullptr) {
+        return NAME_NOT_FOUND;
+    }
+    
+    // 2. 验证帧率
+    if (!isValidFrameRate(frameRate)) {
+        return BAD_VALUE;
+    }
+    
+    // 3. 设置图层帧率
+    layer->setFrameRate(frameRate, compatibility);
+    
+    // 4. 根据策略决定是否立即切换
+    if (changeFrameRateStrategy == CHANGE_FRAME_RATE_IMMEDIATELY) {
+        RefreshRate target = mRefreshRateConfigs->selectBestRefreshRate(frameRate);
+        performSeamlessSwitch(target);
+    }
+    
+    // 5. 通知帧率选择器更新
+    mFrameRateSelector->onFrameRateOverrideChanged();
+    
+    return NO_ERROR;
 }
 ```
 
